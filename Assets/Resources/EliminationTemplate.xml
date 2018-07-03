@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<main>
+  <Block>
+	<type>SMALL_2_2</type>
+    <width>2</width>
+    <height>2</height>
+  </Block> 
+   <Block>
+	<type>MIDDLE_3_2</type>
+    <width>3</width>
+    <height>2</height>
+  </Block>
+  <Block>
+    <type>BIG_4_3</type>
+    <width>4</width>
+    <height>3</height>
+  </Block>
+</main>

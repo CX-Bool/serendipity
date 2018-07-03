@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<main>
+    <Plant>
+	      <type>CHI_SMALL</type>
+        <width>2</width>
+        <height>2</height>
+        <TemplateType>SMALL_2_2</TemplateType>
+    </Plant> 
+  
+     <Plant>
+	       <type>CHI_MIDDLE</type>
+         <width>2</width>
+         <height>2</height>
+         <TemplateType>MIDDLE_3_2</TemplateType>
+    </Plant>
+  
+    <Plant>
+         <type>CHI_BIG</type>
+         <width>2</width>
+         <height>2</height>
+         <TemplateType>BIG_4_3</TemplateType>
+    </Plant>
+</main>
