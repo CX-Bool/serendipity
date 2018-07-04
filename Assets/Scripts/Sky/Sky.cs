@@ -38,7 +38,7 @@ public class Sky : MonoBehaviour {
 
     Vector3 debugWorldPos;
     Vector3 debugDirPos;
-
+    //可消除的模板
     List<TemplateProperty> elimTemplate;
     // Use this for initialization
     void Start () {
@@ -90,7 +90,7 @@ public class Sky : MonoBehaviour {
                     CloudElimProperty tmp = new CloudElimProperty();
                     tmp.width = width;
                     tmp.height = height;
-                    tmp.type = type;
+                    tmp.templateType = type;
                     
                     elimTemplate.Add(tmp);
                 }

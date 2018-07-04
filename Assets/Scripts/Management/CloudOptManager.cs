@@ -31,7 +31,7 @@ public class CloudOptManager : MonoBehaviour {
     public delegate void OptionsChange();
     public static OptionsChange optionChangeHandle;
 
-    private List<CloudProperty> optionTemplate;//可选的云彩种类
+    private List<CloudProperty> options;//可选的云彩种类
     public int maxNum = 3;//最多同时有三个选项
     private int insertIndex = 0;//当前要插入选项的位置
     public static List<CloudProperty> optionList;
@@ -40,7 +40,7 @@ public class CloudOptManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        optionTemplate = new List<CloudProperty>();
+        options = new List<CloudProperty>();
         optionList = new List<CloudProperty>();
 
         steps = LevelManager.GetInstance().Steps;
@@ -106,7 +106,7 @@ public class CloudOptManager : MonoBehaviour {
                         {
                             cloudProperty.data[i, j] = data[i * height + j] - '0';
                         }
-                    optionTemplate.Add(cloudProperty);
+                    options.Add(cloudProperty);
                 }
 
             }
@@ -115,11 +115,11 @@ public class CloudOptManager : MonoBehaviour {
     }
     public CloudProperty RandomNewCloud(Global.CloudType type = Global.CloudType.NORMAL)
     {
-        if (optionTemplate.Count == 0)
+        if (options.Count == 0)
             return null;
         else
         {
-            CloudProperty c= optionTemplate[Random.Range(0, optionTemplate.Count)];
+            CloudProperty c= options[Random.Range(0, options.Count)];
             return c;
         }
     }
@@ -158,7 +158,6 @@ public static class ExtensionMethods
         }
         index = options.FindIndex((CloudProperty s) => s == cloud);
         options.RemoveAt(index);
-        Debug.Log(index);
 
         CloudOptManager.optionChangeHandle();
     }

@@ -21,8 +21,8 @@ public class TemplateProperty {
     ///// </summary>
     //public int[,] data;
     /// <summary>
-    /// 模板类型，目前有小中大三种
+    /// 云彩消除和植物生长使用相同的模板类型，目前有小中大三种
     /// </summary>
-    public Global.TemplateType type;
+    public Global.TemplateType templateType;
 
 }

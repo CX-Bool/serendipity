@@ -31,7 +31,7 @@ public class Ground : MonoBehaviour
     private GameObject[,] gridObj;
     #endregion
 
-  
+    PlantOptManager plantOptManager;
     // Use this for initialization
     void Start()
     {
@@ -39,11 +39,11 @@ public class Ground : MonoBehaviour
         hNum = Global.VerticalGridNum;
         planeWidth = transform.GetComponent<Collider>().bounds.size.x;//大面片的长宽
         planeHeight = transform.GetComponent<Collider>().bounds.size.z;
-        Debug.Log(transform.GetComponent<Collider>().bounds.size);
         gridWidth = planeWidth / wNum;
         gridHeight = planeHeight / hNum;
         gridObj = new GameObject[wNum, hNum];
 
+        plantOptManager = PlantOptManager.GetInstance();
         InitGround();
     }
 
@@ -74,4 +74,8 @@ public class Ground : MonoBehaviour
        transform.rotation = Quaternion.Euler(-40, 0, 0);
     }
 
+    public Global.TemplateType UpdatePlantOption()
+    {
+        return Global.TemplateType.UNMATCH;
+    }
 }

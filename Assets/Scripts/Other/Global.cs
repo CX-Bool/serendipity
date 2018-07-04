@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class Global{
 
+   
     #region 定义棋盘格子数
     public static int HorizonalGridNum = 12;
     public static int VerticalGridNum = 4;
@@ -26,7 +27,8 @@ public static class Global{
     {
         SMALL_2_2,
         MIDDLE_3_2,
-        BIG_4_3
+        BIG_4_3,
+        UNMATCH
     }
 
     public static void SwapVector3(Vector3 a,Vector3 b)
@@ -35,4 +37,6 @@ public static class Global{
         a = b;
         b = tmp;
     }
+
+
 }

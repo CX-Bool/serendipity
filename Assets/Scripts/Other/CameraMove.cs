@@ -12,7 +12,6 @@ public class CameraMove : MonoBehaviour {
         set
         {
             target = value;
-            Debug.Log(target);
 
             StopCoroutine("Movement");
             StartCoroutine("Movement", target);
@@ -33,7 +32,6 @@ public class CameraMove : MonoBehaviour {
 
     IEnumerator Movement(Quaternion target)
     {
-        Debug.Log("target");
         while (transform.rotation!=target)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, target, smoothing*Time.deltaTime);

@@ -21,7 +21,7 @@ public class Cloud : MonoBehaviour{
 
     protected void Init()
     {
-        Debug.Log("cloud");
+
         //for (int i = 0; i < width; i++)
         //    for (int j = 0; j < height; j++)
         //    {

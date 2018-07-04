@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <main>
     <Plant>
-	      <type>CHI_SMALL</type>
-        <width>2</width>
-        <height>2</height>
+	      <Type>CHI_SMALL</Type>
+        <Width>2</Width>
+        <Height>2</Height>
         <TemplateType>SMALL_2_2</TemplateType>
+        <TextureName>chiSmall</TextureName>
     </Plant> 
   
      <Plant>
-	       <type>CHI_MIDDLE</type>
-         <width>2</width>
-         <height>2</height>
+	       <Type>CHI_MIDDLE</Type>
+         <Width>2</Width>
+         <Height>2</Height>
          <TemplateType>MIDDLE_3_2</TemplateType>
-    </Plant>
+         <TextureName>chiMiddle</TextureName>
+       
+     </Plant>
   
     <Plant>
-         <type>CHI_BIG</type>
-         <width>2</width>
-         <height>2</height>
+         <Type>CHI_BIG</Type>
+         <Width>2</Width>
+         <Height>2</Height>
          <TemplateType>BIG_4_3</TemplateType>
+         <TextureName>chiBig</TextureName>
+
     </Plant>
 </main>
