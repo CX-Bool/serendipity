@@ -24,11 +24,12 @@ public class Ground : MonoBehaviour
     float planeHeight;
     float gridWidth;
     float gridHeight;
+    List<TemplateProperty> elimTemplate;
     #endregion
 
     #region 资源
     public GameObject groundGridPrefab;
-    private GameObject[,] gridObj;
+    private GroundGrid[,] grids;
     #endregion
 
     PlantOptManager plantOptManager;
@@ -41,8 +42,9 @@ public class Ground : MonoBehaviour
         planeHeight = transform.GetComponent<Collider>().bounds.size.z;
         gridWidth = planeWidth / wNum;
         gridHeight = planeHeight / hNum;
-        gridObj = new GameObject[wNum, hNum];
+        grids = new GroundGrid[wNum, hNum];
 
+        elimTemplate = Global.elimTemplate;
         plantOptManager = PlantOptManager.GetInstance();
         InitGround();
     }
@@ -52,14 +54,14 @@ public class Ground : MonoBehaviour
     {
 
     }
-    //初始化生成天空格子
+ 
     public void InitGround()
     {
         float wScale = 1f / wNum * transform.localScale.x;
         float hScale = 1f / hNum * transform.localScale.z;
        
-        float wOffset = Mathf.Abs(Mathf.Cos(transform.rotation.eulerAngles.x));
-        float hOffset = gridHeight * Mathf.Abs(Mathf.Sin(transform.rotation.eulerAngles.x));
+        //float wOffset = Mathf.Abs(Mathf.Cos(transform.rotation.eulerAngles.x));
+        //float hOffset = gridHeight * Mathf.Abs(Mathf.Sin(transform.rotation.eulerAngles.x));
 
         Vector3 leftBottom = transform.position - new Vector3(planeWidth * 0.5f - gridWidth * 0.5f,
                                                                0f,
@@ -67,15 +69,146 @@ public class Ground : MonoBehaviour
         for (int i = 0; i < wNum; i++)
             for (int j = 0; j < hNum; j++)
             {
-                gridObj[i, j] = Instantiate(groundGridPrefab, leftBottom + new Vector3(i * gridWidth, 0.1f, -j * wOffset), transform.rotation);
-                gridObj[i, j].transform.localScale = new Vector3(wScale, hScale, wScale);
-                gridObj[i, j].transform.parent = this.transform;
+                grids[i, j] = Instantiate(groundGridPrefab, leftBottom + new Vector3(i * gridWidth, 0.1f, -j * gridWidth), transform.rotation).GetComponent<GroundGrid>();
+                grids[i, j].transform.localScale = new Vector3(wScale, hScale, wScale);
+                grids[i, j].transform.parent = this.transform;
             }
-       transform.rotation = Quaternion.Euler(-40, 0, 0);
+        transform.rotation = Quaternion.Euler(-40, 0, 0);
     }
-
-    public Global.TemplateType UpdatePlantOption()
+    /// <summary>
+    /// 对一种模板进行匹配
+    /// </summary>
+    /// <param name="template">植物库</param>
+    /// <param name="templateList">返回的匹配上的块的数据</param>
+    /// <param name="hor"></param>
+    /// <param name="ver"></param>
+    public void TemplateMatch(List<TemplateProperty>template, Dictionary<PlantProperty, List<Vector2>> optionList,int[,] hor)
     {
-        return Global.TemplateType.UNMATCH;
+        int width = template[0].width;
+        int height = template[0].height;
+
+        for(int i=0;i<template.Count;i++)
+        {
+            int moisture = (template[i] as PlantProperty).moisture;
+            for(int j=0;j<wNum-width;j++)
+            {
+                bool flag = false;
+                for(int k=0;k<width;k++)//连续width列
+                {
+                    if (hor[j + k, moisture] < height) //同一列必须有多于height个moisture湿度的格子
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if(flag==false)
+                {
+                    for(int n=0;n<hNum-height;n++)//列的范围已经确定为[j,j+width]，在这个范围内依次以每行作为开头来尝试
+                    {
+                        bool flag2 = false;
+                        for(int a=0;a<width;a++)
+                        {
+                            for(int b=0;b<height;b++)
+                            {
+                                if(grids[j+a,n+b].Moisture!=moisture)
+                                {
+                                    flag2 = true;
+                                    break;
+                                }
+                            }
+                            if (flag2)
+                                break;
+                        }
+                        if(flag2==false)
+                        {
+                            List<Vector2> position;
+                            optionList.TryGetValue((template[i] as PlantProperty), out position);
+                            if (!position.Contains(new Vector2(j, n)))
+                            {
+                                position.Add(new Vector2(j, n));
+                            }
+                            
+                        }
+
+                    }                 
+                }
+            }
+        }
+        
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="i">选项左上角的对应格子数组的横坐标</param>
+    /// <param name="j">选项左上角的对应格子数组的纵坐标</param>
+    /// <param name="c">选项数据</param>
+    /// <returns></returns>
+    public void UpdatePlantOption()
+    {
+        //int left = i - 1 < 0 ? 0 : i - 1;
+        //int right = (i + c.width+1) > wNum ? wNum : (i + c.width);
+        //int bottom = j - 1 < 0 ? 0 : j - 1;
+        //int top = (j + c.height+1) > hNum ? hNum : (j + c.height);
+        //int[,] connectRegion=new int[wNum,hNum];
+        //int regionIndex = 0;
+
+        int[,] horProjection = new int[wNum, Global.dMoisture];
+
+        //遍历一遍找出每行/列，每种湿度的格子有几个
+        for (int m = 0; m < hNum; m++)
+        {
+            for (int n = 0; n < wNum; n++)
+            {
+                horProjection[m, grids[m, n].Moisture]++;
+            }
+        }
+        TemplateMatch(plantOptManager.bigPlants,plantOptManager.optionList,horProjection);
+        TemplateMatch(plantOptManager.middlePlants,plantOptManager.optionList,horProjection);
+        TemplateMatch(plantOptManager.smallPlants,plantOptManager.optionList, horProjection);
+
+        //连通区域标记算法
+        //先逐行扫描，标记行中所有团
+        //for (int n = bottom, a = 0; n < top; n++)
+        //{
+        //    connectRegion[a, 0] = regionIndex;
+
+        //    for (int m=left+1,b=1;m<right;m++)
+        //    {
+
+        //       if(m>0&&grids[n,m].Moisture==grids[n,m-1].Moisture)
+        //        {
+        //            connectRegion[a,b] = connectRegion[a,b-1];
+        //        }
+        //        else
+        //        {
+        //            regionIndex++;
+        //            connectRegion[a, b] = regionIndex;
+        //        }
+        //    }
+        //}
+        ////再将每行的团进行合并
+        //for(int n=bottom+1,a=1;n<top;n++)
+        //{
+        //    for(int m=left,b=0;m<right;m++)
+        //    {
+        //        if (grids[n,m].Moisture == grids[n-1,m].Moisture)
+        //        {
+        //            int moisture = grids[n, m].Moisture;
+        //            int index = connectRegion[a, b];
+        //            while(m<right&&grids[n,m].Moisture==moisture)
+        //            {
+        //                connectRegion[a, b] = index;
+        //                m++;b++;
+        //            }
+
+        //        }
+        //    }
+        //}
+
+       
+    }
+    public void AddMoisture()
+    {
+
     }
 }

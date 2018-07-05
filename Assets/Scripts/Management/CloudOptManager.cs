@@ -34,7 +34,7 @@ public class CloudOptManager : MonoBehaviour {
     private List<CloudProperty> options;//可选的云彩种类
     public int maxNum = 3;//最多同时有三个选项
     private int insertIndex = 0;//当前要插入选项的位置
-    public static List<CloudProperty> optionList;
+    public List<CloudProperty> optionList;
 
     public int steps;//剩余步数
 
@@ -78,7 +78,7 @@ public class CloudOptManager : MonoBehaviour {
     private void InitTemplet()
     {
         //read from xml
-        string filepath = System.Environment.CurrentDirectory + "\\Assets\\Resources\\OptionTemplet.xml";
+        string filepath = System.Environment.CurrentDirectory + "\\Assets\\Resources\\CloudOptionTemplet.xml";
 
         if (File.Exists(filepath))
         {

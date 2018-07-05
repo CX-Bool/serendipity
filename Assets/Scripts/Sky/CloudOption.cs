@@ -41,7 +41,7 @@ public class CloudOption : Option
     {
         int index = HUDManager.GetInstance().cloudOptList.FindIndex((RawImage s) => s == image);
         if (index < 0) Debug.Log("cloudProperty in <Option> is NULL");
-        cloudProperty = CloudOptManager.optionList[index];
+        cloudProperty = CloudOptManager.GetInstance().optionList[index];
     }
 
     protected override void Draging(Vector2 mousePos) {
@@ -49,7 +49,13 @@ public class CloudOption : Option
     }
 
     protected override void EndDrag() {
-        EndDragHandle(cloudProperty, image.rectTransform.position + new Vector3(-image.texture.width * 0.5f, image.texture.height * 0.5f, 0));//通知sky
+
+        //传递图片左上角位置，注意有可能上下边沿超出
+          Vector2 leftTop = image.rectTransform.position + new Vector3(-image.texture.width * 0.5f, image.texture.height * 0.5f, 0);
+
+        ///Debug.Log(position);
+
+        EndDragHandle(cloudProperty,leftTop);//通知sky
     }
     
 }

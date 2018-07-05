@@ -20,9 +20,19 @@ public class PlantOptManager : MonoBehaviour {
         return instance;
     }
 
-    private List<TemplateProperty> smallPlants;
-    private List<TemplateProperty> middlePlants;
-    private List<TemplateProperty> bigPlants;
+    public struct PlantOption
+    {
+        int width;
+        int height;
+        Vector2 position;
+        int moisture;
+    }
+
+    public List<TemplateProperty> smallPlants;
+    public List<TemplateProperty> middlePlants;
+    public List<TemplateProperty> bigPlants;
+
+    public Dictionary<PlantProperty,List<Vector2>> optionList;
 
     #endregion
     // Use this for initialization

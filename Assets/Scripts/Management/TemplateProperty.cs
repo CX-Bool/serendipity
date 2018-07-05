@@ -24,5 +24,8 @@ public class TemplateProperty {
     /// 云彩消除和植物生长使用相同的模板类型，目前有小中大三种
     /// </summary>
     public Global.TemplateType templateType;
-
+    /// <summary>
+    /// 在棋盘上的位置
+    /// </summary>
+    public Vector2 position;
 }

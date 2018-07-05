@@ -22,11 +22,6 @@ public class Cloud : MonoBehaviour{
     protected void Init()
     {
 
-        //for (int i = 0; i < width; i++)
-        //    for (int j = 0; j < height; j++)
-        //    {
-        //        cloud[i, j] = Random.Range(0, 3) > 2 ? 1 : 0;
-        //    }
     }
 
 }

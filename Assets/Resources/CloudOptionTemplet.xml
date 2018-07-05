@@ -11,14 +11,14 @@
 	<type>NORMAL</type>
     <width>3</width>
     <height>2</height>
-    <data>110011</data>
+    <data>101101</data>
 	<textureName>block2</textureName>
   </Cloud>
   <Cloud>
     <type>NORMAL</type>
     <width>3</width>
     <height>2</height>
-    <data>100111</data>
+    <data>110101</data>
     <textureName>block3</textureName>
   </Cloud>
 </main>

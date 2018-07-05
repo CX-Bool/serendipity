@@ -45,7 +45,7 @@ namespace view
         private void EnableSubscribe()
         {
             CloudOptManager.optionChangeHandle += UpdateOption;//选项变更时更新UI
-            optPropertyList = CloudOptManager.optionList;
+            optPropertyList = CloudOptManager.GetInstance().optionList;
            // Option.EndDragHandle += PutUpCloud;//把云彩放置到天空上后要销毁当前UI
         }
 
