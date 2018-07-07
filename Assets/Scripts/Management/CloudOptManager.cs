@@ -36,14 +36,22 @@ public class CloudOptManager : MonoBehaviour {
     private int insertIndex = 0;//当前要插入选项的位置
     public List<CloudProperty> optionList;
 
-    public int steps;//剩余步数
-
-	// Use this for initialization
-	void Start () {
+    private int steps;//剩余步数
+    public int Steps
+    {
+        get { return steps; }
+        set
+        {
+            steps = value;
+            view.HUDManager.GetInstance().SetSteps(steps);
+        }
+    }
+    // Use this for initialization
+    void Start () {
         options = new List<CloudProperty>();
         optionList = new List<CloudProperty>();
 
-        steps = LevelManager.GetInstance().Steps;
+        Steps = LevelManager.GetInstance().Steps;
 
         InitTemplet();
         for (int i = 0; i < maxNum; i++)
@@ -52,22 +60,18 @@ public class CloudOptManager : MonoBehaviour {
         InvokeRepeating("ReloadOption", 3, 2.5f);
     }
 
-    // Update is called once per frame
-    void Update () {
-
-    }
-
     private void ReloadOption()
     {
-        if (optionList.Count >= maxNum|| steps == 0)
+        if (optionList.Count >= maxNum|| Steps == 0)
             return;
-        steps--;
         optionList.AddAndNotify(ref insertIndex,RandomNewCloud());
       
     }
     public void RemoveOption(CloudProperty cloudProperty)
     {
-        optionList.RemoveAndNotify(ref insertIndex,cloudProperty);
+        Steps--;
+
+        optionList.RemoveAndNotify(cloudProperty);
     }
     public void PutBackOption(CloudProperty cloudProperty)
     {
@@ -148,7 +152,7 @@ public static class List_CloudProperty_ExtensionMethods
        
     }
 
-    public static void RemoveAndNotify(this List<CloudProperty> options,ref int index,CloudProperty cloud)
+    public static void RemoveAndNotify(this List<CloudProperty> options,CloudProperty cloud)
     {
 
         if (cloud==null)
@@ -156,8 +160,8 @@ public static class List_CloudProperty_ExtensionMethods
             Debug.Log("cloudProperty in <CloudOptManager>.RemoveAndNotify is NULL");
             return;
         }
-        index = options.FindIndex((CloudProperty s) => s == cloud);
-        options.RemoveAt(index);
+       // index = options.FindIndex((CloudProperty s) => s == cloud);
+        options.Remove(cloud);
 
         CloudOptManager.optionChangeHandle();
     }

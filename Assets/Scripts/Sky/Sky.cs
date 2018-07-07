@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Xml;
-using System.IO;
-using view;
 public class Sky : MonoBehaviour {
 
     #region 单例管理
@@ -11,7 +7,6 @@ public class Sky : MonoBehaviour {
     private void Awake()
     {
         instance = this;
-        EnableSubscribe();
     }
 
     public static Sky GetInstance()
@@ -27,19 +22,21 @@ public class Sky : MonoBehaviour {
     float planeHeight;
     float gridWidth;
     float gridHeight;
-
+    ///0为不可用(红色)，1为可用(绿色)，-1为不存在
     int hintAble = -1;
-    List<SkyGrid> hoveringGrids;
+    List<SkyHintGrid> hoveringGrids;
     List<TemplateProperty> elimTemplate;
 
     #endregion
 
     #region 资源
     public GameObject skyGridPrefab;
+    public GameObject skyHintGridPrefab;
     public GameObject rainWater;
 
-    ///0为不可用(红色)，1为可用(绿色)，-1为不存在
+
     private SkyGrid[,] grids;
+    private SkyHintGrid[,] hints;
     #endregion
 
     Vector3 debugHitPoint;
@@ -53,8 +50,9 @@ public class Sky : MonoBehaviour {
         gridWidth = planeWidth / wNum;
         gridHeight = planeHeight / hNum;
         grids = new SkyGrid[wNum, hNum];
+        hints = new SkyHintGrid[wNum, hNum];
 
-        hoveringGrids = new List<SkyGrid>();
+        hoveringGrids = new List<SkyHintGrid>();
 
         elimTemplate = Global.elimTemplate;
 
@@ -65,15 +63,16 @@ public class Sky : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        foreach(SkyGrid i in hoveringGrids)
+        foreach(SkyHintGrid i in hoveringGrids)
         {
-            i.Status=hintAble;
+            i.HintState=hintAble;
+            i.material.color = Color.white;
         }
     }
     private void EnableSubscribe()
     {
         CloudOption.DragingHandle += DragingOption;//拖动选项的时候要显示效果
-        CloudOption.EndDragHandle += PutUpCloud;//放上云彩
+        CloudOption.EndDragHandle += EndDrag;//放上云彩
     }
    
     private void InitSky()
@@ -91,10 +90,16 @@ public class Sky : MonoBehaviour {
         for (int i = 0; i < wNum; i++)
             for (int j = 0; j < hNum; j++)
             {
-                grids[i, j] = Instantiate(skyGridPrefab, leftTop + new Vector3(i * gridWidth, 0.1f, j*wOffset), transform.rotation).GetComponent<SkyGrid>();
+                grids[i, j] = Instantiate(skyGridPrefab, leftTop + new Vector3(i * gridWidth, 0.05f, j*wOffset), transform.rotation).GetComponent<SkyGrid>();
                 grids[i, j].transform.localScale = new Vector3(wScale, hScale, wScale);
                 grids[i, j].transform.parent = this.transform;
                 grids[i, j].position = new Vector2Int(i, j);
+
+                hints[i, j] = Instantiate(skyHintGridPrefab, leftTop + new Vector3(i * gridWidth, 0.1f, j * wOffset), transform.rotation).GetComponent<SkyHintGrid>();
+                hints[i, j].transform.localScale = new Vector3(wScale, hScale, wScale);
+                hints[i, j].transform.parent = this.transform;
+                hints[i, j].position = new Vector2Int(i, j);
+
             }
         transform.rotation =Quaternion.Euler(angle, 0, 0);
 
@@ -109,26 +114,27 @@ public class Sky : MonoBehaviour {
         Vector2Int pos;
 
         hintAble = -1;
-        hoveringGrids.ClearAndNotify();
+        hoveringGrids.ClearHintState();
 
-        if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("Sky")))
+        if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("SkyHint")))
         {
             // 打印射线检测到的物体的名称  
             //Debug.Log("射线检测到的物体名称: " + hit.transform.name);
 
-            pos = hit.transform.GetComponent<SkyGrid>().position;//图片左上角碰撞到的格子的坐标
+            pos = hit.transform.GetComponent<SkyHintGrid>().position;//图片左上角碰撞到的格子的坐标
 
-            if (pos.x + c.width >= wNum || pos.y - c.height + 1 < 0)
+            //如果块没有全部包含在棋盘里，一定提示异常
+            if (pos.x + c.width > wNum || pos.y - c.height + 1 < 0)
             {
-                int right = pos.x + c.width >= wNum ? wNum - 1 : pos.x + c.width;
+                int right = pos.x + c.width > wNum ? wNum : pos.x + c.width;
                 int bottom = pos.y - c.height + 1 < 0 ? 0 : pos.y - c.height + 1;
                 hintAble = 0;
                 for(int i=pos.x;i<right;i++)
                 {
                     for(int j=pos.y;j>=bottom;j--)
                     {
-                        if (grids[i, j].Status == 0 && c.data[i - pos.x, pos.y - j] == 1)
-                            hoveringGrids.Add(grids[i,j]);
+                        if (grids[i, j].State == 0 && c.data[i - pos.x, pos.y - j] == 1)
+                            hoveringGrids.Add(hints[i,j]);
                       
                     }
                 }
@@ -142,13 +148,13 @@ public class Sky : MonoBehaviour {
                     {
                         if (c.data[i, j] == 1)
                         {
-                            if (grids[pos.x + i, pos.y - j].Status == 0)
+                            //如果范围内没有别的云彩块，就是绿色提示，否则也要提示异常
+                            if (grids[pos.x + i, pos.y - j].State == 0)
                             {
-                                hoveringGrids.Add(grids[pos.x + i, pos.y - j]);
+                                hoveringGrids.Add(hints[pos.x + i, pos.y - j]);
 
                             }
-                            else hintAble = 0;
-                           
+                            else hintAble = 0;                      
                         }
                     }
                 }
@@ -156,15 +162,13 @@ public class Sky : MonoBehaviour {
         }
 
     }
-    /// <summary>
-    /// 将云彩放到天空上
-    /// </summary>
-    /// <param name="c">该云彩的数据</param>
-    /// <param name="position">该云彩图片左上角在屏幕上的位置</param>
-    private void PutUpCloud(CloudProperty c, Vector2 leftTop)
+
+    private void EndDrag(CloudProperty c, Vector2 leftTop)
     {
+        //消除提示
+        hoveringGrids.ClearHintState();
+
         bool destroyOption = false;
-        
         RaycastHit hit;
 
         Vector2Int pos;
@@ -189,7 +193,7 @@ public class Sky : MonoBehaviour {
             bottom = pos.y - c.height + 1;
             //判断选项是否被完全包含在天空里
             //既然左上角碰撞到了就只需检查右界、下界
-            if (pos.x + c.width >=wNum|| pos.y-c.height+1  < 0)
+            if (pos.x + c.width > wNum|| pos.y-c.height + 1 < 0)
             {
                 destroyOption = false;
             }
@@ -202,14 +206,14 @@ public class Sky : MonoBehaviour {
                     {
                         if (c.data[i, j] == 1)
                         {
-                            if(grids[pos.x +i, pos.y -j].Active==1)
+                            if(grids[pos.x +i, pos.y -j].State==1)
                             {
                                 destroyOption = false;
                                 break;
                             }
                             else
                             {
-                                grids[pos.x + i, pos.y - j].Active = 1;
+                                grids[pos.x + i, pos.y - j].State = 1;
                             }
                         }
                     }
@@ -236,7 +240,7 @@ public class Sky : MonoBehaviour {
     public void TemplateMatch(int l, int r, int t, int b)
     {
         //先检查大模板
-        for (int e = elimTemplate.Count; e >=0; e--)
+        for (int e = elimTemplate.Count-1; e >=0; e--)
         {
             int width = elimTemplate[e].width;
             int height = elimTemplate[e].height;
@@ -257,7 +261,7 @@ public class Sky : MonoBehaviour {
                     {
                         for (int n = 0; n < height; n++)
                         {
-                            if (grids[i + m, j - n].Active == 0)
+                            if (grids[i + m, j - n].State == 0)
                             {
                                 flag = true;
                                 break;
@@ -268,18 +272,17 @@ public class Sky : MonoBehaviour {
                     }
                     if (flag == false)
                     {
-                        
                         RainFall(i,j,width,height);
-                        //这里注意！sky的y坐标从上到下是由大到小，ground的y坐标从上到下是由小到大！
 
                         Ground.GetInstance().RainFall(i, j, width, height);
+                        Ground.GetInstance().UpdatePlantOption();
                     }
                 }
             }
         }
     }
     /// <summary>
-    /// 通知rainManager降雨
+    /// 降雨
     /// 通知ground加湿
     /// </summary>
     /// <param name="x">区域左上角坐标</param>
@@ -292,9 +295,9 @@ public class Sky : MonoBehaviour {
         {
             for (int n = y; n > y-height; n--)
             {
-                grids[m, n].Active = 0;
+                grids[m, n].State = 0;
                 Instantiate(rainWater, grids[m, n].transform.position,Quaternion.Euler(Vector3.forward));
-                Debug.LogFormat("x:{0},y:{1},active:{2}", m, n, grids[m, n].Active);
+                Debug.LogFormat("x:{0},y:{1},active:{2}", m, n, grids[m, n].State);
 
             }
         }
@@ -310,11 +313,11 @@ public static class List_SkyGrid_ExtensionMethods
     /// </summary>
     /// <param name="cl">表示调用这个方法的类型是List<CloudProperty></param>
     /// <param name="cloud">真正的参数，要添加到list中的item</param>
-    public static void ClearAndNotify(this List<SkyGrid> options)
+    public static void ClearHintState(this List<SkyHintGrid> options)
     {
-        foreach(SkyGrid i in options)
+        foreach(SkyHintGrid i in options)
         {
-            i.Status = 0;
+            i.HintState = -1;
         }
         options.Clear();
 

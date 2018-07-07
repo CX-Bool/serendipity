@@ -6,11 +6,11 @@ public class RainWater : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+        Invoke("DestoryMyself", 3);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    private void DestoryMyself()
+    {
+        Destroy(gameObject);
+    }
 }

@@ -21,7 +21,7 @@ public class LevelManager : MonoBehaviour {
     #endregion
 
     #region 关卡数据
-    private int steps = 10;
+    private int steps = 20;
     public int Steps
     {
         get { return steps; }
@@ -35,10 +35,5 @@ public class LevelManager : MonoBehaviour {
 
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-   
-   
+
 }

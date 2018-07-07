@@ -49,12 +49,8 @@ public class Ground : MonoBehaviour
         InitGround();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
 
-    }
- 
+    // sky的y坐标从上到下是由大到小，ground的y坐标从上到下是由小到大！
     public void InitGround()
     {
         float wScale = 1f / wNum * transform.localScale.x;
@@ -82,27 +78,27 @@ public class Ground : MonoBehaviour
     /// <param name="templateList">返回的匹配上的块的数据</param>
     /// <param name="hor"></param>
     /// <param name="ver"></param>
-    public void TemplateMatch(List<TemplateProperty>template, Dictionary<PlantProperty, List<Vector2>> optionList,int[,] hor)
+    public void TemplateMatch(List<PlantProperty> template, Dictionary<PlantProperty, List<Vector2Int>> optionList,int[,] hor)
     {
         int width = template[0].width;
         int height = template[0].height;
 
         for(int i=0;i<template.Count;i++)
         {
-            int moisture = (template[i] as PlantProperty).moisture;
-            for(int j=0;j<wNum-width;j++)
+            int moisture = (template[i]).moisture;
+            for(int j=0;j<=wNum-width;j++)
             {
-                bool flag = false;
-                for(int k=0;k<width;k++)//连续width列
-                {
-                    if (hor[j + k, moisture] < height) //同一列必须有多于height个moisture湿度的格子
-                    {
-                        flag = true;
-                        break;
-                    }
-                }
-                if(flag==false)
-                {
+                //bool flag = false;
+                //for(int k=0;k<width;k++)//连续width列 //每列必须有多于height个moisture湿度的格子
+                //{
+                //    if (hor[j + k, moisture] < height)
+                //    {
+                //        flag = true;
+                //        break;
+                //    }
+                //}
+                //if(flag==false)
+                //{
                     for(int n=0;n<hNum-height;n++)//列的范围已经确定为[j,j+width]，在这个范围内依次以每行作为开头来尝试
                     {
                         bool flag2 = false;
@@ -110,7 +106,7 @@ public class Ground : MonoBehaviour
                         {
                             for(int b=0;b<height;b++)
                             {
-                                if(grids[j+a,n+b].Moisture!=moisture)
+                                if(grids[j+a,n+b].Moisture<moisture)
                                 {
                                     flag2 = true;
                                     break;
@@ -121,17 +117,26 @@ public class Ground : MonoBehaviour
                         }
                         if(flag2==false)
                         {
-                            List<Vector2> position;
-                            optionList.TryGetValue((template[i] as PlantProperty), out position);
-                            if (!position.Contains(new Vector2(j, n)))
+                            Vector2Int position=new Vector2Int(j,n);
+                            //如果字典里有选项没位置，增加位置
+                            if(optionList.ContainsKey(template[i]))
                             {
-                                position.Add(new Vector2(j, n));
+                                if (!optionList[template[i]].Contains(position))
+                                {
+                                    optionList[template[i]].Add(position);
+                                }
                             }
-                            
+                            else//如果字典里没这个选项就新增选项
+                            {
+                                optionList.Add(template[i], new List<Vector2Int>());
+                                optionList[template[i]].Add(position);
+
+                            }
+                            PlantOptManager.optionChangeHandle();
                         }
 
                     }                 
-                }
+                //}
             }
         }
         
@@ -154,18 +159,18 @@ public class Ground : MonoBehaviour
 
         int[,] horProjection = new int[wNum, Global.dMoisture];
 
-        //遍历一遍找出每行/列，每种湿度的格子有几个
-        for (int m = 0; m < hNum; m++)
-        {
-            for (int n = 0; n < wNum; n++)
-            {
-                horProjection[m, grids[m, n].Moisture]++;
-            }
-        }
+        ////遍历一遍找出每行，每种湿度的格子有几个
+        //for (int m = 0; m < hNum; m++)
+        //{
+        //    for (int n = 0; n < wNum; n++)
+        //    {
+        //        horProjection[n, grids[n,m].Moisture]++;
+        //    }
+        //}
         TemplateMatch(plantOptManager.bigPlants,plantOptManager.optionList,horProjection);
-        TemplateMatch(plantOptManager.middlePlants,plantOptManager.optionList,horProjection);
+        TemplateMatch(plantOptManager.middlePlants,plantOptManager.optionList, horProjection);
         TemplateMatch(plantOptManager.smallPlants,plantOptManager.optionList, horProjection);
-
+        
         //连通区域标记算法
         //先逐行扫描，标记行中所有团
         //for (int n = bottom, a = 0; n < top; n++)

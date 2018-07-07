@@ -54,5 +54,7 @@ public class PlantPanelToggle : MonoBehaviour {
             yield return null;
 
         }
+       // plantPanel.SetActive((isHiding == 0));
+
     }
 }

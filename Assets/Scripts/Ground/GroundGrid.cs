@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GroundGrid : AbstractGrid {
 
-    private int moisture = 1;
+    private int moisture = 2;
     public int Moisture
     {
         get { return moisture; }
@@ -24,10 +24,6 @@ public class GroundGrid : AbstractGrid {
     //变干的速率
     private int dryRate = 40;
     public static List<Texture2D> textures;
-
-    // Update is called once per frame
-    void Update () {
-	}
 
     public override void InitFunction()
     {

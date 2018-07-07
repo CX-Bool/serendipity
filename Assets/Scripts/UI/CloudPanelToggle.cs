@@ -54,5 +54,6 @@ public class CloudPanelToggle : MonoBehaviour {
             yield return null;
 
         }
+       // cloudPanel.SetActive((isHiding==0));
     }
 }

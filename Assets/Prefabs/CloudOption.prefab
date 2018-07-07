@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114963898649885010}
   - component: {fileID: 114729172020848222}
   m_Layer: 5
-  m_Name: Option
+  m_Name: CloudOption
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

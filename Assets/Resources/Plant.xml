@@ -6,23 +6,26 @@
         <Height>2</Height>
         <TemplateType>SMALL_2_2</TemplateType>
         <TextureName>chiSmall</TextureName>
+        <Moisture>2</Moisture>
     </Plant> 
   
      <Plant>
 	       <Type>CHI_MIDDLE</Type>
-         <Width>2</Width>
+         <Width>3</Width>
          <Height>2</Height>
          <TemplateType>MIDDLE_3_2</TemplateType>
          <TextureName>chiMiddle</TextureName>
-       
+         <Moisture>2</Moisture>
+
      </Plant>
   
     <Plant>
          <Type>CHI_BIG</Type>
-         <Width>2</Width>
-         <Height>2</Height>
+         <Width>4</Width>
+         <Height>3</Height>
          <TemplateType>BIG_4_3</TemplateType>
          <TextureName>chiBig</TextureName>
+         <Moisture>2</Moisture>
 
     </Plant>
 </main>

@@ -19,37 +19,31 @@ public class PlantOptManager : MonoBehaviour {
     {
         return instance;
     }
-
-    public struct PlantOption
-    {
-        int width;
-        int height;
-        Vector2 position;
-        int moisture;
-    }
-
-    public List<TemplateProperty> smallPlants;
-    public List<TemplateProperty> middlePlants;
-    public List<TemplateProperty> bigPlants;
-
-    public Dictionary<PlantProperty,List<Vector2>> optionList;
-
     #endregion
+    public List<PlantProperty> smallPlants;
+    public List<PlantProperty> middlePlants;
+    public List<PlantProperty> bigPlants;
+
+    public Dictionary<PlantProperty,List<Vector2Int>> optionList;
+
+    /// <summary>
+    /// 通知HUDManager刷新选项
+    /// </summary>
+    public delegate void OptionsChange();
+    public static OptionsChange optionChangeHandle;
+
     // Use this for initialization
     void Start () {
         InitPlantList();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     private void InitPlantList()
     {
-        smallPlants = new List<TemplateProperty>();
-        middlePlants = new List<TemplateProperty>();
-        bigPlants = new List<TemplateProperty>();
+        smallPlants = new List<PlantProperty>();
+        middlePlants = new List<PlantProperty>();
+        bigPlants = new List<PlantProperty>();
+        optionList = new Dictionary<PlantProperty, List<Vector2Int>>();
         string filepath = System.Environment.CurrentDirectory + "\\Assets\\Resources\\Plant.xml";
 
         if (File.Exists(filepath))
@@ -63,6 +57,8 @@ public class PlantOptManager : MonoBehaviour {
                 {
                     int width = int.Parse(xn.SelectSingleNode("Width").InnerText);
                     int height = int.Parse(xn.SelectSingleNode("Height").InnerText);
+                    int moisture = int.Parse(xn.SelectSingleNode("Moisture").InnerText);
+
                     Global.TemplateType templetType = (Global.TemplateType)System.Enum.Parse(typeof(Global.TemplateType), xn.SelectSingleNode("TemplateType").InnerText);
                     string tex = xn.SelectSingleNode("TextureName").InnerText;
                     Global.PlantType type = (Global.PlantType)System.Enum.Parse(typeof(Global.PlantType), xn.SelectSingleNode("Type").InnerText);
@@ -73,6 +69,7 @@ public class PlantOptManager : MonoBehaviour {
                     property.type = type;
                     property.templateType = templetType;
                     property.texture = Resources.Load("Textures/" + tex) as Texture2D;
+                    property.moisture = moisture;
 
                    switch(property.templateType)
                     {
