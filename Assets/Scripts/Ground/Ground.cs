@@ -73,7 +73,7 @@ public class Ground : MonoBehaviour
                 grids[i, j].transform.localScale = new Vector3(wScale, hScale, wScale);
                 grids[i, j].transform.parent = this.transform;
             }
-        transform.rotation = Quaternion.Euler(-40, 0, 0);
+        transform.rotation = Quaternion.Euler(-50, 0, 0);
     }
     /// <summary>
     /// 对一种模板进行匹配
@@ -207,8 +207,16 @@ public class Ground : MonoBehaviour
 
        
     }
-    public void AddMoisture()
+    public void RainFall(int x, int y, int width, int height)
     {
+        for (int m = x; m < x + width; m++)
+        {
+            for (int n = y; n > y - height; n--)
+            {
+                grids[m, n].Moisture += 1 ;
+                //Debug.LogFormat("ground：x:{0},y:{1}", m, n);
 
+            }
+        }
     }
 }

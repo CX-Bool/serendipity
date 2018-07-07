@@ -125,7 +125,7 @@ public class CloudOptManager : MonoBehaviour {
     }
 }
 
-public static class ExtensionMethods
+public static class List_CloudProperty_ExtensionMethods
 {
     /// <summary>
     /// 扩展方法：自定义的List的Add和Remove

@@ -58,7 +58,7 @@ public class Option : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
         }
         InitSeletedItem();
     }
-
+    
     //当鼠标拖动时调用   对应接口 IDragHandler
     public void OnDrag(PointerEventData eventData)
     {

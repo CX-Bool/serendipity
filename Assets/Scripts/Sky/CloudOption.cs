@@ -20,10 +20,11 @@ public class CloudOption : Option
 
 
     private CloudProperty cloudProperty;//必须知道在拖动的云彩的形状
-
-  
+    Vector2 leftTop;//当前在拖动的云彩图片的左上角
+    Vector3 imageOffset;
+   
     #region 委托
-    /// <param name="cloudProperty">当前拖动的云彩的位置</param>
+    /// <param name="cloudProperty">当前拖动的云彩</param>
     /// <param name="position">图片左上角的世界坐标</param>
     public delegate void Drag(CloudProperty cloudProperty, Vector2 position);
     /// <summary>
@@ -37,23 +38,26 @@ public class CloudOption : Option
     public static Drag DragingHandle;
     #endregion
 
+   
     protected override void InitSeletedItem()
     {
         int index = HUDManager.GetInstance().cloudOptList.FindIndex((RawImage s) => s == image);
         if (index < 0) Debug.Log("cloudProperty in <Option> is NULL");
         cloudProperty = CloudOptManager.GetInstance().optionList[index];
+
+        imageOffset = new Vector3(-image.texture.width * 0.5f, image.texture.height * 0.5f, 0);
     }
 
     protected override void Draging(Vector2 mousePos) {
-        DragingHandle(cloudProperty, mousePos);//通知天空，划过的区域产生特效等
+        leftTop = image.rectTransform.position + imageOffset;
+
+        DragingHandle(cloudProperty, leftTop);//通知天空，划过的区域产生特效等
     }
 
     protected override void EndDrag() {
 
         //传递图片左上角位置，注意有可能上下边沿超出
-          Vector2 leftTop = image.rectTransform.position + new Vector3(-image.texture.width * 0.5f, image.texture.height * 0.5f, 0);
 
-        ///Debug.Log(position);
 
         EndDragHandle(cloudProperty,leftTop);//通知sky
     }

@@ -111,3 +111,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyGridPrefab: {fileID: 1778804687122630, guid: 711e84fa2d78d704cb29f827f4ecdb40,
     type: 2}
+  rainWater: {fileID: 1210890182330458, guid: 47fb5402b0a4f3f4d9b3fdde8d80f401, type: 2}

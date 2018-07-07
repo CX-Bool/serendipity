@@ -22,7 +22,7 @@ public class GroundGrid : AbstractGrid {
     }
 
     //变干的速率
-    private int dryRate = 20;
+    private int dryRate = 40;
     public static List<Texture2D> textures;
 
     // Update is called once per frame
@@ -39,10 +39,7 @@ public class GroundGrid : AbstractGrid {
         Moisture -= 1;
       
     }
-    void AddMoisture()
-    {
-        Moisture++;
-    }
+
     public override void InitTextures()
     {
         textures = new List<Texture2D>();
