@@ -47,9 +47,14 @@ public class Ground : MonoBehaviour
         elimTemplate = Global.elimTemplate;
         plantOptManager = PlantOptManager.GetInstance();
         InitGround();
+        EnableSubscribe();
     }
 
-
+    private void EnableSubscribe()
+    {
+        PlantOption.DragingHandle += DragingOption;
+        PlantOption.EndDragHandle += EndDrag;
+    }
     // sky的y坐标从上到下是由大到小，ground的y坐标从上到下是由小到大！
     public void InitGround()
     {
@@ -132,7 +137,7 @@ public class Ground : MonoBehaviour
                                 optionList[template[i]].Add(position);
 
                             }
-                            PlantOptManager.optionChangeHandle();
+
                         }
 
                     }                 
@@ -140,6 +145,14 @@ public class Ground : MonoBehaviour
             }
         }
         
+    }
+    public void DragingOption(PlantProperty plantProperty,Vector2 leftTop)
+    {
+
+    }
+    public void EndDrag(PlantProperty plantProperty, Vector2 leftTop)
+    {
+
     }
     /// <summary>
     /// 

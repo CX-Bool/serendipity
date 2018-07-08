@@ -25,10 +25,10 @@ public class PutBackOption : MonoBehaviour {
     IEnumerator Movement(Vector3 target)
     {
 
-        while (Vector3.Distance(transform.position, target) >= 0.01f)
+        while (Vector3.Distance(transform.localPosition, target) >= 0.01f)
         {
 
-            transform.position = Vector3.Lerp(transform.position, target, smoothing * Time.deltaTime);
+            transform.localPosition = Vector3.Lerp(transform.localPosition, target, smoothing * Time.deltaTime);
             yield return null;
         }
     }

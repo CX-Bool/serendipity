@@ -7,8 +7,8 @@ using view;
 public class PlantOption : Option
 {
 
-    private PlantProperty plantProperty;
-    private List<Vector2Int> position;
+    public  PlantProperty plantProperty;
+    public List<Vector2Int> position;
 
     Vector2 leftTop;//当前在拖动的云彩图片的左上角
     Vector3 imageOffset;//图片左上角到图片中心的偏移量
@@ -27,13 +27,17 @@ public class PlantOption : Option
     /// </summary>
     public static Drag DragingHandle;
     #endregion
-
-
+    //不一定被点到，所以有些东西被点到后再初始化
+    protected override void InitSeletedItem() {
+        imageOffset = new Vector3(image.texture.width * 0.5f, image.texture.height * 0.5f,0);
+        imgNormalScale = transform.localScale;
+        imgReduceScale = transform.localScale * 1.2f;
+    }
     protected override void Draging(Vector2 mousePos)
     {
         leftTop = image.rectTransform.position + imageOffset;
 
-        DragingHandle(plantProperty, leftTop);//通知天空，划过的区域产生特效等
+        DragingHandle(plantProperty, leftTop);//通知地面，划过的区域产生特效等
     }
 
     protected override void EndDrag()

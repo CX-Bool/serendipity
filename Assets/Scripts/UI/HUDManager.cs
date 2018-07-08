@@ -26,7 +26,7 @@ namespace view
         #region 辅助变量
         private int optWidthOffset = 300;
         private int optHeightPos = 0;
-
+        private int centerPoint = 540;
         bool isCloudPanel = true;//当前显示的是否云彩菜单
         #endregion
 
@@ -49,21 +49,21 @@ namespace view
             plantOptionList = PlantOptManager.GetInstance().optionList;
 
             EnableSubscribe();
-            UpdateOption();
+            UpdateCloudOption();
 
         }
         // Update is called once per frame
 
         private void EnableSubscribe()
         {
-            CloudOptManager.optionChangeHandle += UpdateOption;//选项变更时更新UI
-            PlantOptManager.optionChangeHandle += UpdateOption;
+            CloudOptManager.optionChangeHandle += UpdateCloudOption;//选项变更时更新UI
+            //云彩panel可见时是无需更新植物panel的，只有当植物panel升上来，才有必要更新
+            CloudPanelToggle.PanelToggleHandle += UpdatePlantOption;
         }
 
-        private void UpdateOption()
+        private void UpdateCloudOption()
         {
-            if(isCloudPanel)//如果当前可见的是云彩菜单
-            {
+           
                 for (int i = 0; i < cloudOptionList.Count; i++)
                 {
                     cloudOptImageList[i].gameObject.SetActive(true);
@@ -77,28 +77,29 @@ namespace view
                 {
                     cloudOptImageList[i].gameObject.SetActive(false);
                 }
-            }
-            else//如果当前可见的是植物菜单
-            {
-                plantOptImageList.Clear();
-                foreach(KeyValuePair<PlantProperty,List<Vector2Int>> item in plantOptionList)
-                {
-                    RawImage plantOption = Instantiate(plantOptPrefab, transform.position, transform.rotation);
-                    plantOption.texture = item.Key.texture;
-                    plantOption.GetComponent<PlantOption>().imgNormalScale = plantOption.transform.localScale;
-                    plantOption.GetComponent<PlantOption>().imgReduceScale = plantOption.transform.localScale*1.2f;
-                    plantOption.GetComponent<PlantOption>().transform.parent = transform;
-
-                    plantOptImageList.Add(plantOption);
-
-                }
-            }
         }
-
-        private void PutUpCloud(CloudProperty cloudProperty, Vector2 position)
+        private void UpdatePlantOption()
         {
+            plantOptImageList.Clear();
+            int index = 0;
+            foreach (KeyValuePair<PlantProperty, List<Vector2Int>> item in plantOptionList)
+            {
+                RawImage plantOption = Instantiate(plantOptPrefab, transform.localPosition, transform.rotation);
+                plantOption.texture = item.Key.texture;
 
+                plantOption.GetComponent<PlantOption>().canvas = transform.GetComponent<RectTransform>();
+                plantOption.transform.parent = transform.Find("PlantPanel");
+                plantOption.transform.localPosition = new Vector3(optWidthOffset * (index - 1), optHeightPos, 0);
+
+                plantOption.GetComponent<PlantOption>().plantProperty = item.Key;
+                plantOption.GetComponent<PlantOption>().position = item.Value;
+
+                plantOptImageList.Add(plantOption);
+                index++;
+
+            }
         }
+      
 
         public void PutBackOption()
         {

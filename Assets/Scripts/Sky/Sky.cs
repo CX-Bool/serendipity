@@ -297,7 +297,7 @@ public class Sky : MonoBehaviour {
             {
                 grids[m, n].State = 0;
                 Instantiate(rainWater, grids[m, n].transform.position,Quaternion.Euler(Vector3.forward));
-                Debug.LogFormat("x:{0},y:{1},active:{2}", m, n, grids[m, n].State);
+                //Debug.LogFormat("x:{0},y:{1},active:{2}", m, n, grids[m, n].State);
 
             }
         }

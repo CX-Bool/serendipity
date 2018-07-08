@@ -26,11 +26,6 @@ public class PlantOptManager : MonoBehaviour {
 
     public Dictionary<PlantProperty,List<Vector2Int>> optionList;
 
-    /// <summary>
-    /// 通知HUDManager刷新选项
-    /// </summary>
-    public delegate void OptionsChange();
-    public static OptionsChange optionChangeHandle;
 
     // Use this for initialization
     void Start () {
