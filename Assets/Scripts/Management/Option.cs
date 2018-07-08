@@ -25,9 +25,11 @@ public class Option : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
     protected RawImage image;                 //图片
 
     protected Vector2 offset = new Vector3();    //用来得到鼠标和图片的差值
-    public Vector3 imgReduceScale = new Vector3(0.8f, 0.8f, 1);   //设置图片缩放
+    public Vector3 imgReduceScale = new Vector3(1.2f, 1.2f, 1);   //设置图片缩放
     public Vector3 imgNormalScale = new Vector3(1, 1, 1);   //正常大小
 
+    protected Vector2 leftTop;//当前在拖动的图片的左上角
+    protected Vector3 imageOffset;//图片左上角到图片中心的偏移量
     #endregion
     // Use this for initialization
     void Start()

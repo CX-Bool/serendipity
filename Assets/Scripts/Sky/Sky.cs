@@ -306,7 +306,7 @@ public class Sky : MonoBehaviour {
 }
 
 
-public static class List_SkyGrid_ExtensionMethods
+public static class List_SkyHintGrid_ExtensionMethods
 {
     /// <summary>
     /// 扩展方法：自定义的List的Add和Remove

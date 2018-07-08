@@ -20,8 +20,7 @@ public class CloudOption : Option
 
 
     private CloudProperty cloudProperty;//必须知道在拖动的云彩的形状
-    Vector2 leftTop;//当前在拖动的云彩图片的左上角
-    Vector3 imageOffset;//图片左上角到图片中心的偏移量
+
    
     #region 委托
     /// <param name="cloudProperty">当前拖动的云彩</param>

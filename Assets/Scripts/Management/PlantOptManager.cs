@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Xml;
 using System.IO;
+using view;
 /// <summary>
 /// 管理植物选项菜单
 /// </summary>
@@ -25,8 +26,12 @@ public class PlantOptManager : MonoBehaviour {
     public List<PlantProperty> bigPlants;
 
     public Dictionary<PlantProperty,List<Vector2Int>> optionList;
-
-
+    /// <summary>
+    /// 仅当放置拖动植物选项后通知HUDManager放回或销毁选项
+    /// (销毁选项也要调用putBackOption移动其他选项的位置）
+    /// </summary>
+    public delegate void OptionsChange();
+    public static OptionsChange optionChangeHandle;
     // Use this for initialization
     void Start () {
         InitPlantList();
@@ -84,4 +89,13 @@ public class PlantOptManager : MonoBehaviour {
 
         }
     }
+
+    public void PutBackOption(PlantProperty property)
+    {
+        //int index = optionList.FindIndex(s => s == cloudProperty);
+        //HUDManager.GetInstance().PutBackOption(index);
+        HUDManager.GetInstance().PutBackOption();
+    }
+
+
 }

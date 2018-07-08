@@ -51,6 +51,7 @@ namespace view
             EnableSubscribe();
             UpdateCloudOption();
 
+
         }
         // Update is called once per frame
 
@@ -59,27 +60,39 @@ namespace view
             CloudOptManager.optionChangeHandle += UpdateCloudOption;//选项变更时更新UI
             //云彩panel可见时是无需更新植物panel的，只有当植物panel升上来，才有必要更新
             CloudPanelToggle.PanelToggleHandle += UpdatePlantOption;
+            CloudPanelToggle.PanelToggleHandle += TogglePanelFlag;
+
+            PlantOptManager.optionChangeHandle += ClearPlantOption;
+            PlantOptManager.optionChangeHandle += UpdatePlantOption;
         }
 
+        //CloudOption是重复使用的，每次调用只是设置是否可见，放回正确位置
         private void UpdateCloudOption()
         {
-           
-                for (int i = 0; i < cloudOptionList.Count; i++)
-                {
-                    cloudOptImageList[i].gameObject.SetActive(true);
-                    cloudOptImageList[i].texture = cloudOptionList[i].texture;
-                    cloudOptImageList[i].transform.localScale = new Vector3(cloudOptionList[i].width / (float)cloudOptionList[i].height, 1, 1);
-                    cloudOptImageList[i].GetComponent<CloudOption>().imgNormalScale = cloudOptImageList[i].transform.localScale;
-                    cloudOptImageList[i].GetComponent<CloudOption>().imgReduceScale = cloudOptImageList[i].transform.localScale * 1.2f;
-                    cloudOptImageList[i].transform.localPosition = new Vector3(optWidthOffset * (i - 1), optHeightPos, 0);
-                }
-                for (int i = cloudOptionList.Count; i < CloudOptManager.GetInstance().maxNum; i++)
-                {
-                    cloudOptImageList[i].gameObject.SetActive(false);
-                }
+            for (int i = 0; i < cloudOptionList.Count; i++)
+            {
+                cloudOptImageList[i].gameObject.SetActive(true);
+                cloudOptImageList[i].texture = cloudOptionList[i].texture;
+                cloudOptImageList[i].transform.localScale = new Vector3(cloudOptionList[i].width / (float)cloudOptionList[i].height, 1, 1);
+                cloudOptImageList[i].GetComponent<CloudOption>().imgNormalScale = cloudOptImageList[i].transform.localScale;
+                cloudOptImageList[i].GetComponent<CloudOption>().imgReduceScale = cloudOptImageList[i].transform.localScale * 1.2f;
+                cloudOptImageList[i].transform.localPosition = new Vector3(optWidthOffset * (i - 1), optHeightPos, 0);
+            }
+            for (int i = cloudOptionList.Count; i < CloudOptManager.GetInstance().maxNum; i++)
+            {
+                cloudOptImageList[i].gameObject.SetActive(false);
+            }
+        }
+        private void ClearPlantOption()
+        {
+
         }
         private void UpdatePlantOption()
         {
+            for (int i = 0; i < plantOptImageList.Count; i++)
+            {
+                Destroy(plantOptImageList[i]);
+            }
             plantOptImageList.Clear();
             int index = 0;
             foreach (KeyValuePair<PlantProperty, List<Vector2Int>> item in plantOptionList)
@@ -88,7 +101,7 @@ namespace view
                 plantOption.texture = item.Key.texture;
 
                 plantOption.GetComponent<PlantOption>().canvas = transform.GetComponent<RectTransform>();
-                plantOption.transform.parent = transform.Find("PlantPanel");
+                plantOption.transform.SetParent(transform.Find("PlantPanel"));
                 plantOption.transform.localPosition = new Vector3(optWidthOffset * (index - 1), optHeightPos, 0);
 
                 plantOption.GetComponent<PlantOption>().plantProperty = item.Key;
@@ -96,7 +109,6 @@ namespace view
 
                 plantOptImageList.Add(plantOption);
                 index++;
-
             }
         }
       
@@ -121,6 +133,8 @@ namespace view
         {
             steps.text = s.ToString();
         }
+        private void TogglePanelFlag()
+        { isCloudPanel = !isCloudPanel; }
     }
 
 

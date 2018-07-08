@@ -4,7 +4,19 @@ using UnityEngine;
 
 public class GroundGrid : AbstractGrid {
 
-    private int moisture = 2;
+    //state属性的访问控制
+    public int State
+    {
+        get { return state; }
+        set
+        {
+            state = value;
+            if(state==0)//如果上面没有东西就显示湿度
+                material.mainTexture = textures[state];
+        }
+    }
+
+    private int moisture = 1;
     public int Moisture
     {
         get { return moisture; }
@@ -16,7 +28,8 @@ public class GroundGrid : AbstractGrid {
                 moisture = Global.lowestMoisture;
                 //game over
             }
-            material.mainTexture = textures[moisture + 1];
+            if(state==0)
+                material.mainTexture = textures[moisture + 1];
         //    texture = textures[moisture + 1];
         }
     }

@@ -5,6 +5,11 @@ using UnityEngine;
 public class AbstractGrid : MonoBehaviour {
 
 
+    /// <summary>
+    /// 格子当前状态，0为空，1为有东西
+    /// </summary>
+    protected int state = 0;
+  
 
     public Vector2Int position;
 

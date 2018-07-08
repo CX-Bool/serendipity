@@ -24,15 +24,25 @@ public class Ground : MonoBehaviour
     float planeHeight;
     float gridWidth;
     float gridHeight;
+
+    int hintAble = -1;
+    List<GroundHintGrid> activeHints;
+
     List<TemplateProperty> elimTemplate;
     #endregion
 
     #region 资源
     public GameObject groundGridPrefab;
+    public GameObject groundHintGridPrefab;
+
     private GroundGrid[,] grids;
+    private GroundHintGrid[,] hints;
     #endregion
 
+    Vector3 debugHitPoint;
+
     PlantOptManager plantOptManager;
+    List<PlantProperty> plantList;
     // Use this for initialization
     void Start()
     {
@@ -44,12 +54,26 @@ public class Ground : MonoBehaviour
         gridHeight = planeHeight / hNum;
         grids = new GroundGrid[wNum, hNum];
 
+        hints = new GroundHintGrid[wNum, hNum];
+        activeHints = new List<GroundHintGrid>();
+
         elimTemplate = Global.elimTemplate;
         plantOptManager = PlantOptManager.GetInstance();
+        plantList = new List<PlantProperty>();
+
         InitGround();
         EnableSubscribe();
-    }
 
+        UpdatePlantOption();
+    }
+    private void Update()
+    {
+       foreach(GroundHintGrid i in activeHints)
+        {
+            i.HintState = hintAble;
+            i.material.color = Color.white*0.5f;
+        }
+    }
     private void EnableSubscribe()
     {
         PlantOption.DragingHandle += DragingOption;
@@ -73,6 +97,12 @@ public class Ground : MonoBehaviour
                 grids[i, j] = Instantiate(groundGridPrefab, leftBottom + new Vector3(i * gridWidth, 0.1f, -j * gridWidth), transform.rotation).GetComponent<GroundGrid>();
                 grids[i, j].transform.localScale = new Vector3(wScale, hScale, wScale);
                 grids[i, j].transform.parent = this.transform;
+                grids[i, j].position = new Vector2Int(i, j);
+
+                hints[i,j]= Instantiate(groundHintGridPrefab, leftBottom + new Vector3(i * gridWidth, 0.1f, -j * gridWidth), transform.rotation).GetComponent<GroundHintGrid>();
+                hints[i, j].transform.localScale = new Vector3(wScale, hScale, wScale);
+                hints[i, j].transform.parent = this.transform;
+                hints[i, j].position = new Vector2Int(i, j);
             }
         transform.rotation = Quaternion.Euler(-50, 0, 0);
     }
@@ -83,7 +113,7 @@ public class Ground : MonoBehaviour
     /// <param name="templateList">返回的匹配上的块的数据</param>
     /// <param name="hor"></param>
     /// <param name="ver"></param>
-    public void TemplateMatch(List<PlantProperty> template, Dictionary<PlantProperty, List<Vector2Int>> optionList,int[,] hor)
+    public void TemplateMatch(List<PlantProperty> template, Dictionary<PlantProperty, List<Vector2Int>> optionList)
     {
         int width = template[0].width;
         int height = template[0].height;
@@ -104,56 +134,49 @@ public class Ground : MonoBehaviour
                 //}
                 //if(flag==false)
                 //{
-                    for(int n=0;n<hNum-height;n++)//列的范围已经确定为[j,j+width]，在这个范围内依次以每行作为开头来尝试
+                for(int n=0;n<=hNum-height;n++)///列的范围已经确定为[j,j+width]，在这个范围内依次以每行作为开头来尝试
+                {
+                    bool flag2 = false;
+                    for(int a=0;a<width;a++)
                     {
-                        bool flag2 = false;
-                        for(int a=0;a<width;a++)
+                        for(int b=0;b<height;b++)
                         {
-                            for(int b=0;b<height;b++)
+                            if(grids[j+a,n+b].Moisture<moisture||grids[j+a,n+b].State==1)
                             {
-                                if(grids[j+a,n+b].Moisture<moisture)
-                                {
-                                    flag2 = true;
-                                    break;
-                                }
-                            }
-                            if (flag2)
+                                flag2 = true;
                                 break;
+                            }
                         }
-                        if(flag2==false)
+                        if (flag2)
+                            break;
+                    }
+                    if(flag2==false)
+                    {
+                        Vector2Int position=new Vector2Int(j,n);
+                        //如果字典里有选项没位置，增加位置
+                        if(optionList.ContainsKey(template[i]))
                         {
-                            Vector2Int position=new Vector2Int(j,n);
-                            //如果字典里有选项没位置，增加位置
-                            if(optionList.ContainsKey(template[i]))
+                            if (!optionList[template[i]].Contains(position))
                             {
-                                if (!optionList[template[i]].Contains(position))
-                                {
-                                    optionList[template[i]].Add(position);
-                                }
-                            }
-                            else//如果字典里没这个选项就新增选项
-                            {
-                                optionList.Add(template[i], new List<Vector2Int>());
                                 optionList[template[i]].Add(position);
-
                             }
+                        }
+                        else//如果字典里没这个选项就新增选项
+                        {
+                            optionList.Add(template[i], new List<Vector2Int>());
+                            optionList[template[i]].Add(position);
 
                         }
 
-                    }                 
+                    }
+
+                }                 
                 //}
             }
         }
         
     }
-    public void DragingOption(PlantProperty plantProperty,Vector2 leftTop)
-    {
-
-    }
-    public void EndDrag(PlantProperty plantProperty, Vector2 leftTop)
-    {
-
-    }
+  
     /// <summary>
     /// 
     /// </summary>
@@ -170,7 +193,7 @@ public class Ground : MonoBehaviour
         //int[,] connectRegion=new int[wNum,hNum];
         //int regionIndex = 0;
 
-        int[,] horProjection = new int[wNum, Global.dMoisture];
+        //int[,] horProjection = new int[wNum, Global.dMoisture];
 
         ////遍历一遍找出每行，每种湿度的格子有几个
         //for (int m = 0; m < hNum; m++)
@@ -180,10 +203,13 @@ public class Ground : MonoBehaviour
         //        horProjection[n, grids[n,m].Moisture]++;
         //    }
         //}
-        TemplateMatch(plantOptManager.bigPlants,plantOptManager.optionList,horProjection);
-        TemplateMatch(plantOptManager.middlePlants,plantOptManager.optionList, horProjection);
-        TemplateMatch(plantOptManager.smallPlants,plantOptManager.optionList, horProjection);
-        
+        plantOptManager.optionList.Clear();
+
+        TemplateMatch(plantOptManager.bigPlants,plantOptManager.optionList);
+        TemplateMatch(plantOptManager.middlePlants,plantOptManager.optionList);
+        TemplateMatch(plantOptManager.smallPlants,plantOptManager.optionList);
+
+        PlantOptManager.optionChangeHandle();//通知HUD更新选项
         //连通区域标记算法
         //先逐行扫描，标记行中所有团
         //for (int n = bottom, a = 0; n < top; n++)
@@ -225,6 +251,20 @@ public class Ground : MonoBehaviour
 
        
     }
+    private void GrowPlant(Vector2Int leftTop, PlantProperty plant)
+    {
+        plantList.Add(plant);
+        for (int i = leftTop.x; i < leftTop.x + plant.width; i++)
+        {
+            for (int j = leftTop.y; j < leftTop.y + plant.height; j++)
+            {
+                grids[i, j].material.mainTexture = plant.texture;
+                grids[i, j].State = 1;
+            }
+        }
+
+
+    }
     public void RainFall(int x, int y, int width, int height)
     {
         for (int m = x; m < x + width; m++)
@@ -237,4 +277,149 @@ public class Ground : MonoBehaviour
             }
         }
     }
+
+    public void DragingOption(PlantProperty p, Vector2 leftTop)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(leftTop);
+
+        RaycastHit hit;
+
+        Vector2Int pos;
+
+        hintAble = -1;
+        activeHints.ClearHintState();
+
+        if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("GroundHint")))
+        {
+            // 打印射线检测到的物体的名称  
+            //Debug.Log("射线检测到的物体名称: " + hit.transform.name);
+
+            pos = hit.transform.GetComponent<GroundHintGrid>().position;//图片左上角碰撞到的格子的坐标
+
+            //如果块没有全部包含在棋盘里，一定提示异常
+            if (pos.x + p.width > wNum || pos.y + p.height > hNum)
+            {
+                int right = pos.x + p.width > wNum ? wNum : pos.x + p.width;
+                int bottom = pos.y + p.height  >hNum ? hNum : pos.y + p.height;
+                hintAble = 0;
+                for (int i = pos.x; i < right; i++)
+                {
+                    for (int j = pos.y; j < bottom; j++)
+                    {
+                        if (grids[i, j].State == 0)
+                            activeHints.Add(hints[i, j]);
+
+                    }
+                }
+            }
+            else
+            {
+                hintAble = 1;
+                for (int i = 0; i < p.width; i++)
+                {
+                    for (int j = 0; j < p.height; j++)//注意pos.y是上大下小
+                    {
+                        if (grids[pos.x + i, pos.y + j].Moisture < p.moisture)
+                            hintAble = 0;
+                        //如果范围内没有别的云彩块，就是绿色提示，否则也要提示异常
+                        if (grids[pos.x + i, pos.y + j].State == 0)
+                        {
+                            activeHints.Add(hints[pos.x + i, pos.y + j]);
+
+                        }
+                        else hintAble = 0;
+                     
+                    }
+                }
+            }
+        }
+
+    }
+    public void EndDrag(PlantProperty p, Vector2 leftTop)
+    {
+        activeHints.ClearHintState();
+
+        bool destroyOption = false;
+
+        RaycastHit hit;
+
+        Vector2Int pos = new Vector2Int();
+        int left = 0;//图片对应的最左和最右格子，用于传递给TemplateMatch(),减小遍历面积
+        int right = 0;
+        int top = 0;
+        int bottom = 0;
+
+        Ray ray = Camera.main.ScreenPointToRay(leftTop);
+        if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("Ground")))
+        {
+            activeHints.ClearHintState();
+            //debugHitPoint = hit.point;
+
+            // 打印射线检测到的物体的名称  
+            //Debug.Log("射线检测到的物体名称: " + hit.transform.name);
+
+            pos = hit.transform.GetComponent<GroundGrid>().position;//图片左上角碰撞到的格子的坐标
+            left = pos.x;
+            right = pos.x + p.width - 1;
+            top = pos.y;
+            bottom = pos.y + p.height - 1;
+            //判断选项是否被完全包含在棋盘里
+            //既然左上角碰撞到了就只需检查右界、下界
+            //ground的格子是从上到下下标从小到大的
+            if (pos.x + p.width > wNum || pos.y + p.height > hNum)
+            {
+                destroyOption = false;
+            }
+            else
+            {
+                destroyOption = true;
+                for (int i = 0; i < p.width; i++)
+                {
+                    for (int j = 0; j < p.height; j++)//注意pos.y是上大下小
+                    {
+                        //如果这片地上有东西就不能放置
+                        if (grids[pos.x + i, pos.y + j].State == 1||grids[pos.x+i,pos.y+j].Moisture<p.moisture)
+                        {
+                            destroyOption = false;
+                            break;
+                        }
+
+                    }
+                    if (destroyOption == false)
+                        break;
+                }
+            }
+        }
+
+
+        if (destroyOption)
+        {
+            GrowPlant(pos, p);
+            UpdatePlantOption();
+        }
+        else
+        {
+            //如果没拖到云彩上，要把选项放回到原来的位置
+            PlantOptManager.GetInstance().PutBackOption(p);
+        }
+    }
+}
+
+public static class List_GroundHintGrid_ExtensionMethods
+{
+    /// <summary>
+    /// 扩展方法：自定义的List的Add和Remove
+    /// </summary>
+    /// <param name="cl">表示调用这个方法的类型是List<CloudProperty></param>
+    /// <param name="cloud">真正的参数，要添加到list中的item</param>
+    public static void ClearHintState(this List<GroundHintGrid> options)
+    {
+        foreach (GroundHintGrid i in options)
+        {
+            i.HintState = -1;
+        }
+        options.Clear();
+
+    }
+
 }

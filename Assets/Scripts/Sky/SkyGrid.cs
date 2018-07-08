@@ -4,17 +4,14 @@ using UnityEngine;
 
 public class SkyGrid : AbstractGrid
 {
-    /// <summary>
-    /// 格子当前状态，0为空，1为有云彩
-    /// </summary>
-    private int state = 0;
+    //state属性的访问控制
     public int State
     {
         get { return state; }
         set
         {
             state = value;
-            material.mainTexture=textures[state];
+            material.mainTexture = textures[state];
         }
     }
 
