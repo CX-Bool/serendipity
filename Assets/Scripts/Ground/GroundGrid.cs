@@ -35,12 +35,12 @@ public class GroundGrid : AbstractGrid {
     }
 
     //变干的速率
-    private int dryRate = 40;
+    private int dryRate = 50;
     public static List<Texture2D> textures;
 
     public override void InitFunction()
     {
-        InvokeRepeating("UpdateMoisture", dryRate, dryRate);
+       // InvokeRepeating("UpdateMoisture", dryRate, dryRate);
     }
 
     void UpdateMoisture()

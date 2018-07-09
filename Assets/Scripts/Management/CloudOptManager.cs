@@ -32,6 +32,8 @@ public class CloudOptManager : MonoBehaviour {
     public static OptionsChange optionChangeHandle;
 
     private List<CloudProperty> options;//可选的云彩种类
+    int maxImageWidth = 300;//选项最大宽度
+
     public int maxNum = 3;//最多同时有三个选项
     private int insertIndex = 0;//当前要插入选项的位置
     public List<CloudProperty> optionList;
@@ -104,7 +106,7 @@ public class CloudOptManager : MonoBehaviour {
                     cloudProperty.height = height;
                     cloudProperty.data = new int[width, height];
                     cloudProperty.texture= Resources.Load("Textures/"+ tex) as Texture2D;
-
+    
                     for (int i = 0; i < width; i++)
                         for (int j = 0; j < height; j++)
                         {

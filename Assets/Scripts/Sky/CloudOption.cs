@@ -44,6 +44,9 @@ public class CloudOption : Option
         if (index < 0) Debug.Log("cloudProperty in <Option> is NULL");
         cloudProperty = CloudOptManager.GetInstance().optionList[index];
 
+        //imgReduceScale = (256f/imgRect.rect.width);
+        //imgNormalScale = (256f/imgRect.rect.width);
+
         imageOffset = new Vector3(-image.texture.width * 0.5f, image.texture.height * 0.5f, 0);
     }
 

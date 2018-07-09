@@ -60,7 +60,9 @@ namespace view
             CloudOptManager.optionChangeHandle += UpdateCloudOption;//选项变更时更新UI
             //云彩panel可见时是无需更新植物panel的，只有当植物panel升上来，才有必要更新
             CloudPanelToggle.PanelToggleHandle += UpdatePlantOption;
+
             CloudPanelToggle.PanelToggleHandle += TogglePanelFlag;
+            PlantPanelToggle.PanelToggleHandle += TogglePanelFlag;
 
             PlantOptManager.optionChangeHandle += ClearPlantOption;
             PlantOptManager.optionChangeHandle += UpdatePlantOption;
@@ -73,7 +75,7 @@ namespace view
             {
                 cloudOptImageList[i].gameObject.SetActive(true);
                 cloudOptImageList[i].texture = cloudOptionList[i].texture;
-                cloudOptImageList[i].transform.localScale = new Vector3(cloudOptionList[i].width / (float)cloudOptionList[i].height, 1, 1);
+                cloudOptImageList[i].transform.localScale = new Vector3(cloudOptionList[i].width / 2f, (float)cloudOptionList[i].height/2f,  1);
                 cloudOptImageList[i].GetComponent<CloudOption>().imgNormalScale = cloudOptImageList[i].transform.localScale;
                 cloudOptImageList[i].GetComponent<CloudOption>().imgReduceScale = cloudOptImageList[i].transform.localScale * 1.2f;
                 cloudOptImageList[i].transform.localPosition = new Vector3(optWidthOffset * (i - 1), optHeightPos, 0);

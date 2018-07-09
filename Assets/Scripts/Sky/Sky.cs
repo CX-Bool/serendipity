@@ -171,7 +171,7 @@ public class Sky : MonoBehaviour {
         bool destroyOption = false;
         RaycastHit hit;
 
-        Vector2Int pos;
+        Vector2Int pos = new Vector2Int();
         int left = 0;//图片对应的最左和最右格子，用于传递给TemplateMatch(),减小遍历面积
         int right = 0;
         int top = 0;
@@ -211,10 +211,7 @@ public class Sky : MonoBehaviour {
                                 destroyOption = false;
                                 break;
                             }
-                            else
-                            {
-                                grids[pos.x + i, pos.y - j].State = 1;
-                            }
+                            
                         }
                     }
                     if (destroyOption == false)
@@ -228,6 +225,14 @@ public class Sky : MonoBehaviour {
         {
             //拖动成功，消除原来的选项
             CloudOptManager.GetInstance().RemoveOption(c);
+            for (int i = 0; i < c.width; i++)
+            {
+                for (int j = 0; j < c.height; j++)//注意pos.y是上大下小
+                {
+                    if(c.data[i, j] == 1)
+                     grids[pos.x + i, pos.y - j].State = 1;
+                }
+            }
             TemplateMatch(left,right,top,bottom);
         }
         else

@@ -79,7 +79,7 @@ public class PlantOptManager : MonoBehaviour {
                         case Global.TemplateType.MIDDLE_3_2:
                             middlePlants.Add(property);
                             break;
-                        case Global.TemplateType.BIG_4_3:
+                        case Global.TemplateType.BIG_3_3:
                             bigPlants.Add(property);
                             break;
                     }

@@ -28,6 +28,7 @@ public class Option : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
     public Vector3 imgReduceScale = new Vector3(1.2f, 1.2f, 1);   //设置图片缩放
     public Vector3 imgNormalScale = new Vector3(1, 1, 1);   //正常大小
 
+
     protected Vector2 leftTop;//当前在拖动的图片的左上角
     protected Vector3 imageOffset;//图片左上角到图片中心的偏移量
     #endregion
@@ -58,6 +59,7 @@ public class Option : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
             //计算图片中心和鼠标点的差值
             offset = imgRect.anchoredPosition - mouseUguiPos;
         }
+        
         InitSeletedItem();
     }
     
