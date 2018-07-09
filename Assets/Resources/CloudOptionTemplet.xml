@@ -2,11 +2,12 @@
 <main>
   <Cloud>
 	<type>NORMAL</type>
-    <width>2</width>
-    <height>2</height>
-    <data>1001</data>
-	<textureName>block1</textureName>
+    <width>1</width>
+    <height>1</height>
+    <data>1</data>
+	<textureName>block0</textureName>
   </Cloud> 
+
    <Cloud>
 	<type>NORMAL</type>
     <width>3</width>
@@ -14,11 +15,76 @@
     <data>101101</data>
 	<textureName>block2</textureName>
   </Cloud>
+
+   <Cloud>
+	<type>NORMAL</type>
+    <width>3</width>
+    <height>2</height>
+    <data>011110</data>
+	<textureName>block3</textureName>
+  </Cloud>
+
+   <Cloud>
+	<type>NORMAL</type>
+    <width>3</width>
+    <height>2</height>
+    <data>101110</data>
+	<textureName>block4</textureName>
+  </Cloud>
+
+   <Cloud>
+	<type>NORMAL</type>
+    <width>3</width>
+    <height>2</height>
+    <data>011101</data>
+	<textureName>block5</textureName>
+  </Cloud>
+
   <Cloud>
     <type>NORMAL</type>
     <width>3</width>
     <height>2</height>
     <data>110101</data>
-    <textureName>block3</textureName>
+    <textureName>block6</textureName>
+  </Cloud>
+
+  <Cloud>
+    <type>NORMAL</type>
+    <width>3</width>
+    <height>2</height>
+    <data>101011</data>
+    <textureName>block7</textureName>
+  </Cloud>
+
+  <Cloud>
+    <type>NORMAL</type>
+    <width>2</width>
+    <height>3</height>
+    <data>110011</data>
+    <textureName>block8</textureName>
+  </Cloud>
+
+  <Cloud>
+    <type>NORMAL</type>
+    <width>2</width>
+    <height>3</height>
+    <data>011110</data>
+    <textureName>block9</textureName>
+  </Cloud>
+
+ <Cloud>
+    <type>NORMAL</type>
+    <width>4</width>
+    <height>1</height>
+    <data>1111</data>
+    <textureName>block10</textureName>
+  </Cloud>
+
+ <Cloud>
+    <type>NORMAL</type>
+    <width>2</width>
+    <height>2</height>
+    <data>1001</data>
+    <textureName>block11</textureName>
   </Cloud>
 </main>

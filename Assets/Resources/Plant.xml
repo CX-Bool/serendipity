@@ -21,9 +21,9 @@
   
     <Plant>
          <Type>CHI_BIG</Type>
-         <Width>4</Width>
+         <Width>3</Width>
          <Height>3</Height>
-         <TemplateType>BIG_4_3</TemplateType>
+         <TemplateType>BIG_3_3</TemplateType>
          <TextureName>chiBig</TextureName>
          <Moisture>2</Moisture>
 
