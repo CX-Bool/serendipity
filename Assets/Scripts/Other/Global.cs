@@ -34,6 +34,7 @@ public static class Global{
         SMALL_2_2,
         MIDDLE_3_2,
         BIG_3_3,
+        BIG_4_3,
         UNMATCH
     }
 

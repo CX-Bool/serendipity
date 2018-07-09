@@ -23,7 +23,7 @@ public class GroundGrid : AbstractGrid {
         set
         {
             moisture = value;
-            if (moisture == Global.lowestMoisture)
+            if (moisture <= Global.lowestMoisture)
             {
                 moisture = Global.lowestMoisture;
                 //game over

@@ -41,6 +41,7 @@ namespace view
         public List<RawImage> cloudOptImageList;
         public List<RawImage> plantOptImageList;
         public RawImage plantOptPrefab;
+        public RawImage sunshineObj;
         #endregion
         // Use this for initialization
         void Start()
@@ -51,7 +52,7 @@ namespace view
             EnableSubscribe();
             UpdateCloudOption();
 
-
+            sunshineObj.CrossFadeAlpha(0, 0, true);
         }
         // Update is called once per frame
 
@@ -137,7 +138,23 @@ namespace view
         }
         private void TogglePanelFlag()
         { isCloudPanel = !isCloudPanel; }
+
+        public void Sunshine(int pos)
+        {
+            sunshineObj.transform.position=new Vector3(Screen.currentResolution.width*(float)(pos)/ (Global.HorizonalGridNum-2),
+                sunshineObj.transform.position.y,sunshineObj.transform.position.z);
+            StartCoroutine("DisplaySunshine");
+        }
+
+        IEnumerator DisplaySunshine()
+        {
+            sunshineObj.CrossFadeAlpha(1, 3, true);
+          
+            yield return new WaitForSecondsRealtime(3);
+
+            sunshineObj.CrossFadeAlpha(0, 2, true);
+        }
     }
 
-
+  
 }

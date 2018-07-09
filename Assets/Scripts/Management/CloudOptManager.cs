@@ -99,14 +99,14 @@ public class CloudOptManager : MonoBehaviour {
                     int height = int.Parse(xn.SelectSingleNode("height").InnerText);
                     string data = xn.SelectSingleNode("data").InnerText;
                     string tex = xn.SelectSingleNode("textureName").InnerText;
-                    Global.CloudType type = (Global.CloudType)System.Enum.Parse(typeof(Global.CloudType), xn.SelectSingleNode("type").InnerText);
+                    //Global.CloudType type = (Global.CloudType)System.Enum.Parse(typeof(Global.CloudType), xn.SelectSingleNode("type").InnerText);
 
                     CloudProperty cloudProperty = new CloudProperty();
                     cloudProperty.width = width;
                     cloudProperty.height = height;
                     cloudProperty.data = new int[width, height];
                     cloudProperty.texture= Resources.Load("Textures/"+ tex) as Texture2D;
-    
+                    
                     for (int i = 0; i < width; i++)
                         for (int j = 0; j < height; j++)
                         {

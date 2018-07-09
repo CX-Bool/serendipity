@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Xml;
+using System.IO;
 
 
 public class LevelManager : MonoBehaviour {
@@ -21,11 +22,14 @@ public class LevelManager : MonoBehaviour {
     #endregion
 
     #region 关卡数据
-    private int steps = 20;
+    private int steps = 30;
     public int Steps
     {
         get { return steps; }
     }
+
+    int interval=70;
+    List<SunshineProperty> sunshineList;
     #endregion
 
     // Use this for initialization
@@ -33,7 +37,53 @@ public class LevelManager : MonoBehaviour {
 
         Global.InitElimTemplate();
 
+        InitSunshineTemplate();
+        InvokeRepeating("Sunshine", interval, interval);
+
     }
-	
+    void InitSunshineTemplate()
+    {
+        sunshineList = new List<SunshineProperty>();
+
+        string filepath = System.Environment.CurrentDirectory + "\\Assets\\Resources\\Sunshine.xml";
+
+        if (File.Exists(filepath))
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(filepath);
+            if (xmlDoc != null)
+            {
+                XmlNodeList cloudList = xmlDoc.SelectSingleNode("main").ChildNodes;
+                foreach (XmlNode xn in cloudList)
+                {
+                    int width = int.Parse(xn.SelectSingleNode("width").InnerText);
+                    int height = int.Parse(xn.SelectSingleNode("height").InnerText);
+                    string data = xn.SelectSingleNode("data").InnerText;
+                  //  Global.CloudType type = (Global.CloudType)System.Enum.Parse(typeof(Global.CloudType), xn.SelectSingleNode("type").InnerText);
+
+                    SunshineProperty property = new SunshineProperty();
+                    property.width = width;
+                    property.height = height;
+                    property.data = new int[width, height];
+
+                    for (int i = 0; i < width; i++)
+                        for (int j = 0; j < height; j++)
+                        {
+                            property.data[i, j] = data[i * height + j] - '0';
+                        }
+                    sunshineList.Add(property);
+                }
+
+            }
+
+        }
+    }
+    void Sunshine()
+    {
+        SunshineProperty property = sunshineList[Random.Range(0, sunshineList.Count)];
+        property.position = new Vector2Int(Random.Range(0, Global.HorizonalGridNum - property.width), Random.Range(0, Global.VerticalGridNum - property.height));
+        Ground.GetInstance().Sunshine(property);
+        view.HUDManager.GetInstance().Sunshine(property.position.x);
+    }
 
 }

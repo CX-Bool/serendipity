@@ -403,6 +403,17 @@ public class Ground : MonoBehaviour
             PlantOptManager.GetInstance().PutBackOption(p);
         }
     }
+
+    public void Sunshine(SunshineProperty property)
+    {
+        for(int i= property.position.x,m=0; i< property.position.x + property.width;i++,m++)
+        {
+            for(int j= property.position.y,n=0; j< property.position.y+property.height;j++,n++)
+            {
+                grids[i, j].Moisture -= property.data[m, n];
+            }
+        }
+    }
 }
 
 public static class List_GroundHintGrid_ExtensionMethods

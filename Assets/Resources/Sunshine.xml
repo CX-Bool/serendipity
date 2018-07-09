@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<main>
+  <Block>
+    <width>3</width>
+    <height>3</height>
+	<data>010121010</data>
+	<type>BIG_3_3</type>
+  </Block> 
+   <Block>
+    <width>3</width>
+    <height>3</height>
+	<data>121232121</data>
+	<type>BIG_3_3</type>
+  </Block>
+  <Block>
+    <width>4</width>
+    <height>3</height>
+	<data>010121121010</data>
+	<type>BIG_4_3</type>
+  </Block>
+</main>

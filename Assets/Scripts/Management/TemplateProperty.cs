@@ -27,5 +27,5 @@ public class TemplateProperty {
     /// <summary>
     /// 在棋盘上的位置
     /// </summary>
-    public Vector2 position;
+    public Vector2Int position;
 }
