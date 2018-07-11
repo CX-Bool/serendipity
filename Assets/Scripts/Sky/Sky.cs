@@ -69,6 +69,7 @@ public class Sky : MonoBehaviour {
             i.HintState=hintAble;
             i.material.color = Color.white;
         }
+       
     }
     private void EnableSubscribe()
     {
@@ -116,6 +117,7 @@ public class Sky : MonoBehaviour {
 
         hintAble = -1;
         hoveringGrids.ClearHintState();
+        Ground.GetInstance().ClearHintState();
 
         if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("SkyHint")))
         {
@@ -135,8 +137,11 @@ public class Sky : MonoBehaviour {
                     for(int j=pos.y;j>=bottom;j--)
                     {
                         if (grids[i, j].State == 0 && c.data[i - pos.x, pos.y - j] == 1)
-                            hoveringGrids.Add(hints[i,j]);
-                      
+                        {
+                            hoveringGrids.Add(hints[i, j]);
+                            Ground.GetInstance().AddHintGrid(i, j);
+                        }
+
                     }
                 }
             }
@@ -153,6 +158,7 @@ public class Sky : MonoBehaviour {
                             if (grids[pos.x + i, pos.y - j].State == 0)
                             {
                                 hoveringGrids.Add(hints[pos.x + i, pos.y - j]);
+                                Ground.GetInstance().AddHintGrid(pos.x + i, pos.y - j);
 
                             }
                             else hintAble = 0;                      
@@ -168,6 +174,7 @@ public class Sky : MonoBehaviour {
     {
         //消除提示
         hoveringGrids.ClearHintState();
+        Ground.GetInstance().ClearHintState();
 
         bool destroyOption = false;
         RaycastHit hit;

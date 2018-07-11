@@ -5,7 +5,7 @@ using UnityEngine;
 public class GroundHintGrid : AbstractGrid {
 
     /// <summary>
-    /// -1为空，0为异常（红色）hint,1为正常（绿色)hint
+    /// -1为空，0为异常（红色）hint,1为正常（绿色)hint,2为天空阴影
     /// </summary>
     private int hintState = 0;
     public int HintState
@@ -32,5 +32,6 @@ public class GroundHintGrid : AbstractGrid {
 
         hintTextures.Add(Resources.Load("Textures/hintUnavailable") as Texture2D);
         hintTextures.Add(Resources.Load("Textures/hintAvailable") as Texture2D);
+        hintTextures.Add(Resources.Load("Textures/hintGround") as Texture2D);
     }
 }

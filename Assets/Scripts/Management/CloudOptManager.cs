@@ -38,22 +38,11 @@ public class CloudOptManager : MonoBehaviour {
     private int insertIndex = 0;//当前要插入选项的位置
     public List<CloudProperty> optionList;
 
-    private int steps;//剩余步数
-    public int Steps
-    {
-        get { return steps; }
-        set
-        {
-            steps = value;
-            view.HUDManager.GetInstance().SetSteps(steps);
-        }
-    }
+   
     // Use this for initialization
     void Start () {
         options = new List<CloudProperty>();
         optionList = new List<CloudProperty>();
-
-        Steps = LevelManager.GetInstance().Steps;
 
         InitTemplet();
         for (int i = 0; i < maxNum; i++)
@@ -64,14 +53,14 @@ public class CloudOptManager : MonoBehaviour {
 
     private void ReloadOption()
     {
-        if (optionList.Count >= maxNum|| Steps == 0)
+        if (optionList.Count >= maxNum|| LevelManager.GetInstance().Steps == 0)
             return;
         optionList.AddAndNotify(ref insertIndex,RandomNewCloud());
       
     }
     public void RemoveOption(CloudProperty cloudProperty)
     {
-        Steps--;
+        LevelManager.GetInstance().Steps--;
         optionList.RemoveAndNotify(cloudProperty);
     }
     public void PutBackOption(CloudProperty cloudProperty)

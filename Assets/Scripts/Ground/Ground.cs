@@ -36,11 +36,13 @@ public class Ground : MonoBehaviour
     public GameObject groundHintGridPrefab;
 
     private GroundGrid[,] grids;
-    private GroundHintGrid[,] hints;
+    public GroundHintGrid[,] hints;
+    List<GroundHintGrid> skyHoveringGrids;
+
     #endregion
 
     PlantOptManager plantOptManager;
-    List<PlantProperty> plantList;
+    List<GameObject> plantList;
     // Use this for initialization
     void Start()
     {
@@ -54,10 +56,11 @@ public class Ground : MonoBehaviour
 
         hints = new GroundHintGrid[wNum, hNum];
         activeHints = new List<GroundHintGrid>();
+        skyHoveringGrids = new List<GroundHintGrid>();
 
         elimTemplate = Global.elimTemplate;
         plantOptManager = PlantOptManager.GetInstance();
-        plantList = new List<PlantProperty>();
+        plantList = new List<GameObject>();
 
         InitGround();
         EnableSubscribe();
@@ -66,10 +69,16 @@ public class Ground : MonoBehaviour
     }
     private void Update()
     {
-       foreach(GroundHintGrid i in activeHints)
+        foreach (GroundHintGrid i in activeHints)
         {
             i.HintState = hintAble;
-            i.material.color = Color.white*0.5f;
+            i.material.color = Color.white * 0.5f;
+        }
+        foreach (GroundHintGrid i in skyHoveringGrids)
+        {
+            Debug.Log(i.position.x);
+            i.HintState = 2;
+            i.material.color = Color.white;
         }
     }
     private void EnableSubscribe()
@@ -82,7 +91,7 @@ public class Ground : MonoBehaviour
     {
         float wScale = 1f / wNum * transform.localScale.x;
         float hScale = 1f / hNum * transform.localScale.z;
-       
+
         //float wOffset = Mathf.Abs(Mathf.Cos(transform.rotation.eulerAngles.x));
         //float hOffset = gridHeight * Mathf.Abs(Mathf.Sin(transform.rotation.eulerAngles.x));
 
@@ -97,7 +106,7 @@ public class Ground : MonoBehaviour
                 grids[i, j].transform.parent = this.transform;
                 grids[i, j].position = new Vector2Int(i, j);
 
-                hints[i,j]= Instantiate(groundHintGridPrefab, leftBottom + new Vector3(i * gridWidth, 0.1f, -j * gridWidth), transform.rotation).GetComponent<GroundHintGrid>();
+                hints[i, j] = Instantiate(groundHintGridPrefab, leftBottom + new Vector3(i * gridWidth, 0.1f, -j * gridWidth), transform.rotation).GetComponent<GroundHintGrid>();
                 hints[i, j].transform.localScale = new Vector3(wScale, hScale, wScale);
                 hints[i, j].transform.parent = this.transform;
                 hints[i, j].position = new Vector2Int(i, j);
@@ -116,10 +125,10 @@ public class Ground : MonoBehaviour
         int width = template[0].width;
         int height = template[0].height;
 
-        for(int i=0;i<template.Count;i++)
+        for (int i = 0; i < template.Count; i++)
         {
             int moisture = (template[i]).moisture;
-            for(int j=0;j<=wNum-width;j++)
+            for (int j = 0; j <= wNum - width; j++)
             {
                 //bool flag = false;
                 //for(int k=0;k<width;k++)//连续width列 //每列必须有多于height个moisture湿度的格子
@@ -132,14 +141,14 @@ public class Ground : MonoBehaviour
                 //}
                 //if(flag==false)
                 //{
-                for(int n=0;n<=hNum-height;n++)///列的范围已经确定为[j,j+width]，在这个范围内依次以每行作为开头来尝试
+                for (int n = 0; n <= hNum - height; n++)///列的范围已经确定为[j,j+width]，在这个范围内依次以每行作为开头来尝试
                 {
                     bool flag2 = false;
-                    for(int a=0;a<width;a++)
+                    for (int a = 0; a < width; a++)
                     {
-                        for(int b=0;b<height;b++)
+                        for (int b = 0; b < height; b++)
                         {
-                            if(grids[j+a,n+b].Moisture<moisture||grids[j+a,n+b].State==1)
+                            if (grids[j + a, n + b].Moisture < moisture || grids[j + a, n + b].State == 1)
                             {
                                 flag2 = true;
                                 break;
@@ -148,11 +157,11 @@ public class Ground : MonoBehaviour
                         if (flag2)
                             break;
                     }
-                    if(flag2==false)
+                    if (flag2 == false)
                     {
-                        Vector2Int position=new Vector2Int(j,n);
+                        Vector2Int position = new Vector2Int(j, n);
                         //如果字典里有选项没位置，增加位置
-                        if(optionList.ContainsKey(template[i]))
+                        if (optionList.ContainsKey(template[i]))
                         {
                             if (!optionList[template[i]].Contains(position))
                             {
@@ -168,13 +177,13 @@ public class Ground : MonoBehaviour
 
                     }
 
-                }                 
+                }
                 //}
             }
         }
-        
+
     }
-  
+
     /// <summary>
     /// 
     /// </summary>
@@ -203,16 +212,16 @@ public class Ground : MonoBehaviour
         //}
         plantOptManager.optionList.Clear();
 
-        TemplateMatch(plantOptManager.bigPlants,plantOptManager.optionList);
-        TemplateMatch(plantOptManager.middlePlants,plantOptManager.optionList);
-        TemplateMatch(plantOptManager.smallPlants,plantOptManager.optionList);
+        TemplateMatch(plantOptManager.bigPlants, plantOptManager.optionList);
+        TemplateMatch(plantOptManager.middlePlants, plantOptManager.optionList);
+        TemplateMatch(plantOptManager.smallPlants, plantOptManager.optionList);
 
         PlantOptManager.optionChangeHandle();//通知HUD更新选项
-        //连通区域标记算法
-        //先逐行扫描，标记行中所有团
-        //for (int n = bottom, a = 0; n < top; n++)
-        //{
-        //    connectRegion[a, 0] = regionIndex;
+                                             //连通区域标记算法
+                                             //先逐行扫描，标记行中所有团
+                                             //for (int n = bottom, a = 0; n < top; n++)
+                                             //{
+                                             //    connectRegion[a, 0] = regionIndex;
 
         //    for (int m=left+1,b=1;m<right;m++)
         //    {
@@ -247,11 +256,31 @@ public class Ground : MonoBehaviour
         //    }
         //}
 
-       
+
     }
     private void GrowPlant(Vector2Int leftTop, PlantProperty plant)
     {
-        plantList.Add(plant);
+        GameObject newPlant = new GameObject(plant.type.ToString());
+        switch (plant.type)
+        {
+            case Global.PlantType.CHI_SMALL:
+                newPlant.AddComponent<PlantChi>();
+
+                break;
+            case Global.PlantType.CHI_MIDDLE:
+                newPlant.AddComponent<PlantChi>();
+
+                break;
+            case Global.PlantType.CHI_BIG:
+                newPlant.AddComponent<PlantChi>();
+
+                break;
+            default:
+                newPlant.AddComponent<Plant>();
+                break;
+        }
+        plantList.Add(newPlant);
+
         for (int i = leftTop.x; i < leftTop.x + plant.width; i++)
         {
             for (int j = leftTop.y; j < leftTop.y + plant.height; j++)
@@ -269,7 +298,7 @@ public class Ground : MonoBehaviour
         {
             for (int n = y; n > y - height; n--)
             {
-                grids[m, n].Moisture += 1 ;
+                grids[m, n].Moisture += 1;
                 //Debug.LogFormat("ground：x:{0},y:{1}", m, n);
 
             }
@@ -298,7 +327,7 @@ public class Ground : MonoBehaviour
             if (pos.x + p.width > wNum || pos.y + p.height > hNum)
             {
                 int right = pos.x + p.width > wNum ? wNum : pos.x + p.width;
-                int bottom = pos.y + p.height  >hNum ? hNum : pos.y + p.height;
+                int bottom = pos.y + p.height > hNum ? hNum : pos.y + p.height;
                 hintAble = 0;
                 for (int i = pos.x; i < right; i++)
                 {
@@ -326,7 +355,7 @@ public class Ground : MonoBehaviour
 
                         }
                         else hintAble = 0;
-                     
+
                     }
                 }
             }
@@ -376,7 +405,7 @@ public class Ground : MonoBehaviour
                     for (int j = 0; j < p.height; j++)//注意pos.y是上大下小
                     {
                         //如果这片地上有东西就不能放置
-                        if (grids[pos.x + i, pos.y + j].State == 1||grids[pos.x+i,pos.y+j].Moisture<p.moisture)
+                        if (grids[pos.x + i, pos.y + j].State == 1 || grids[pos.x + i, pos.y + j].Moisture < p.moisture)
                         {
                             destroyOption = false;
                             break;
@@ -404,18 +433,29 @@ public class Ground : MonoBehaviour
 
     public void Sunshine(SunshineProperty property)
     {
-        for(int i= property.position.x,m=0; i< property.position.x + property.width;i++,m++)
+        for (int i = property.position.x, m = 0; i < property.position.x + property.width; i++, m++)
         {
-            for(int j= property.position.y,n=0; j< property.position.y+property.height;j++,n++)
+            for (int j = property.position.y, n = 0; j < property.position.y + property.height; j++, n++)
             {
                 grids[i, j].Moisture -= property.data[m, n];
             }
         }
     }
+
+    public void AddHintGrid(int i, int j)
+    {
+        Debug.Log(i);
+        skyHoveringGrids.Add(hints[i, j]);
+    }
+    public void ClearHintState()
+    {
+        skyHoveringGrids.ClearHintState();
+    }
 }
 
 public static class List_GroundHintGrid_ExtensionMethods
 {
+
     /// <summary>
     /// 扩展方法：自定义的List的Add和Remove
     /// </summary>

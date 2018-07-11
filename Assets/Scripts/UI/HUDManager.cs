@@ -31,10 +31,11 @@ namespace view
         #endregion
 
         public List<CloudProperty> cloudOptionList;
-        public Dictionary<PlantProperty,List<Vector2Int>> plantOptionList;
+        public Dictionary<PlantProperty, List<Vector2Int>> plantOptionList;
 
         #region UI资源
         public Text steps;
+        public Text floatingTextPrefab;
         /// <summary>
         /// option的图片资源
         /// </summary>
@@ -53,13 +54,10 @@ namespace view
             //plantOptImageList = new List<RawImage>();
             EnableSubscribe();
             Debug.Log("HUDManager Start----1");
-            Debug.Log(cloudOptionList.Count);
-            Debug.Log(cloudOptImageList);
+            SetSteps();
             UpdateCloudOption();
-            Debug.Log("set Sunshine 0");
 
             StartCoroutine("InitialSunshine");
-            Debug.Log("set Sunshine 1");
         }
         // Update is called once per frame
         //不知道为什么设置不成功，逼得我写了个这
@@ -89,7 +87,7 @@ namespace view
                 Debug.Log("HUDManager Start----2");
 
                 cloudOptImageList[i].texture = cloudOptionList[i].texture;
-                cloudOptImageList[i].transform.localScale = new Vector3(cloudOptionList[i].width / 2f, (float)cloudOptionList[i].height/2f,  1);
+                cloudOptImageList[i].transform.localScale = new Vector3(cloudOptionList[i].width / 2f, (float)cloudOptionList[i].height / 2f, 1);
                 cloudOptImageList[i].GetComponent<CloudOption>().imgNormalScale = cloudOptImageList[i].transform.localScale;
                 cloudOptImageList[i].GetComponent<CloudOption>().imgReduceScale = cloudOptImageList[i].transform.localScale * 1.2f;
                 cloudOptImageList[i].transform.localPosition = new Vector3(optWidthOffset * (i - 1), optHeightPos, 0);
@@ -99,7 +97,7 @@ namespace view
                 cloudOptImageList[i].gameObject.SetActive(false);
             }
         }
- 
+
         private void UpdatePlantOption()
         {
             //clear plant option
@@ -126,47 +124,53 @@ namespace view
                 index++;
             }
         }
-      
+
 
         public void PutBackOption()
         {
-            if(isCloudPanel)
+            if (isCloudPanel)
             {
                 for (int i = 0; i < cloudOptionList.Count; i++)
                     cloudOptImageList[i].gameObject.GetComponent<PutBackOption>().Target = new Vector3(optWidthOffset * (i - 1), optHeightPos, 0);
             }
             else
             {
-                for(int i=0;i<plantOptionList.Count;i++)
+                for (int i = 0; i < plantOptionList.Count; i++)
                 {
                     plantOptImageList[i].gameObject.GetComponent<PutBackOption>().Target = new Vector3(optWidthOffset * (i - 1), optHeightPos, 0);
                 }
             }
-           
+
         }
-        public void SetSteps(int s)
+        public void SetSteps()
         {
-            steps.text = s.ToString();
+            steps.text = LevelManager.GetInstance().Steps.ToString();
         }
         private void TogglePanelFlag()
         { isCloudPanel = !isCloudPanel; }
 
         public void Sunshine(int pos)
         {
-            sunshineObj.transform.position=new Vector3(Screen.currentResolution.width*(float)(pos)/ (Global.HorizonalGridNum-2),
-                sunshineObj.transform.position.y,sunshineObj.transform.position.z);
+            sunshineObj.transform.position = new Vector3(Screen.currentResolution.width * (float)(pos) / (Global.HorizonalGridNum - 2),
+                sunshineObj.transform.position.y, sunshineObj.transform.position.z);
             StartCoroutine("DisplaySunshine");
         }
 
         IEnumerator DisplaySunshine()
         {
             sunshineObj.CrossFadeAlpha(1, 3, true);
-          
+
             yield return new WaitForSecondsRealtime(3);
 
             sunshineObj.CrossFadeAlpha(0, 2, true);
         }
+
+        public void GenerateFloatingText(string text,Vector3 position,Quaternion rotation)
+        {
+            Text t=Instantiate(floatingTextPrefab, position, rotation);
+            t.GetComponent<FloatingText>().SetText(text, Color.green);
+            t.transform.SetParent(steps.transform);
+        }
     }
 
-  
 }

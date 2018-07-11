@@ -22,10 +22,20 @@ public class LevelManager : MonoBehaviour {
     #endregion
 
     #region 关卡数据
-    private int steps = 30;
+    private int steps = 3;
     public int Steps
     {
         get { return steps; }
+        set
+        {
+            
+            steps = value;
+            view.HUDManager.GetInstance().SetSteps();
+            if (steps == 0)
+            {
+                Time.timeScale = 0;
+            }
+        }
     }
 
     int interval=70;
@@ -81,5 +91,11 @@ public class LevelManager : MonoBehaviour {
         Ground.GetInstance().Sunshine(property);
         view.HUDManager.GetInstance().Sunshine(property.position.x);
     }
-
+    public void AddSteps(int i)
+    {
+        Steps += i;
+        view.HUDManager.GetInstance().GenerateFloatingText("+" + i.ToString()
+            , view.HUDManager.GetInstance().steps.rectTransform.position
+            , view.HUDManager.GetInstance().steps.rectTransform.rotation);
+    }
 }
