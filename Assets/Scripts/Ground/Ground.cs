@@ -39,8 +39,6 @@ public class Ground : MonoBehaviour
     private GroundHintGrid[,] hints;
     #endregion
 
-    Vector3 debugHitPoint;
-
     PlantOptManager plantOptManager;
     List<PlantProperty> plantList;
     // Use this for initialization
@@ -64,7 +62,7 @@ public class Ground : MonoBehaviour
         InitGround();
         EnableSubscribe();
 
-        UpdatePlantOption();
+        //UpdatePlantOption();
     }
     private void Update()
     {

@@ -54,32 +54,29 @@ public static class Global{
     {
         elimTemplate = new List<TemplateProperty>();
         //read from xml
-        string filepath = System.Environment.CurrentDirectory + "\\Assets\\Resources\\EliminationTemplate.xml";
+       
+        XmlDocument xmlDoc = new XmlDocument();
 
-        if (File.Exists(filepath))
+        xmlDoc.LoadXml(Resources.Load("Config/EliminationTemplate").ToString());
+        if (xmlDoc != null)
         {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(filepath);
-            if (xmlDoc != null)
+            XmlNodeList templateList = xmlDoc.SelectSingleNode("main").ChildNodes;
+            foreach (XmlNode xn in templateList)
             {
-                XmlNodeList templateList = xmlDoc.SelectSingleNode("main").ChildNodes;
-                foreach (XmlNode xn in templateList)
-                {
-                    int width = int.Parse(xn.SelectSingleNode("width").InnerText);
-                    int height = int.Parse(xn.SelectSingleNode("height").InnerText);
-                    Global.TemplateType type = (Global.TemplateType)System.Enum.Parse(typeof(Global.TemplateType), xn.SelectSingleNode("type").InnerText);
+                int width = int.Parse(xn.SelectSingleNode("width").InnerText);
+                int height = int.Parse(xn.SelectSingleNode("height").InnerText);
+                Global.TemplateType type = (Global.TemplateType)System.Enum.Parse(typeof(Global.TemplateType), xn.SelectSingleNode("type").InnerText);
 
-                    CloudElimProperty tmp = new CloudElimProperty();
-                    tmp.width = width;
-                    tmp.height = height;
-                    tmp.templateType = type;
+                CloudElimProperty tmp = new CloudElimProperty();
+                tmp.width = width;
+                tmp.height = height;
+                tmp.templateType = type;
 
-                    elimTemplate.Add(tmp);
-                }
-
+                elimTemplate.Add(tmp);
             }
 
         }
+
     }
 
 

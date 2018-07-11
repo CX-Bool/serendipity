@@ -1,12 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlantPanelToggle : MonoBehaviour {
 
+    #region 单例管理
+    private static PlantPanelToggle instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
+    public static PlantPanelToggle GetInstance()
+    {
+        return instance;
+    }
+    #endregion
+
     private int isHiding = 1;
     public float smoothing = 10f;
-    public GameObject plantPanel;
+    public RawImage plantPanel;
     private Vector3[] position;
     private Vector3 target;
     public Vector3 Target
@@ -28,8 +43,8 @@ public class PlantPanelToggle : MonoBehaviour {
     private void Start()
     {
         position = new Vector3[2];
-        position[1] = plantPanel.transform.position;
-        position[0] = plantPanel.transform.position + new Vector3(0,300f,0);
+        position[0] = plantPanel.rectTransform.localPosition + new Vector3(0, 300f, 0);
+        position[1] = plantPanel.rectTransform.localPosition + new Vector3(0, 0, 0); ;
         CloudPanelToggle.PanelToggleHandle += ToggleHiding;
     }
     public void Click()
@@ -46,15 +61,13 @@ public class PlantPanelToggle : MonoBehaviour {
     }
     IEnumerator Movement(Vector3 target)
     {
-
-        while (Vector3.Distance(plantPanel.transform.position, target) >= 1f)
+        while (Vector3.Distance(plantPanel.rectTransform.localPosition, target) >= 1f)
         {
 
-            plantPanel.transform.position = Vector3.Lerp(plantPanel.transform.position, target, smoothing * Time.deltaTime);
+            plantPanel.rectTransform.localPosition = Vector3.Lerp(plantPanel.rectTransform.localPosition, target, smoothing * Time.deltaTime);
             yield return null;
 
         }
-       // plantPanel.SetActive((isHiding == 0));
 
     }
 }

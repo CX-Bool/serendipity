@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <main>
     <Plant>
-	      <Type>CHI_SMALL</Type>
+	    <Type>CHI_SMALL</Type>
         <Width>2</Width>
         <Height>2</Height>
         <TemplateType>SMALL_2_2</TemplateType>
@@ -10,7 +10,7 @@
     </Plant> 
   
      <Plant>
-	       <Type>CHI_MIDDLE</Type>
+	     <Type>CHI_MIDDLE</Type>
          <Width>3</Width>
          <Height>2</Height>
          <TemplateType>MIDDLE_3_2</TemplateType>

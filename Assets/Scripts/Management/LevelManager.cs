@@ -45,38 +45,34 @@ public class LevelManager : MonoBehaviour {
     {
         sunshineList = new List<SunshineProperty>();
 
-        string filepath = System.Environment.CurrentDirectory + "\\Assets\\Resources\\Sunshine.xml";
+        XmlDocument xmlDoc = new XmlDocument();
 
-        if (File.Exists(filepath))
+        xmlDoc.LoadXml(Resources.Load("Config/Sunshine").ToString());
+        if (xmlDoc != null)
         {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(filepath);
-            if (xmlDoc != null)
+            XmlNodeList cloudList = xmlDoc.SelectSingleNode("main").ChildNodes;
+            foreach (XmlNode xn in cloudList)
             {
-                XmlNodeList cloudList = xmlDoc.SelectSingleNode("main").ChildNodes;
-                foreach (XmlNode xn in cloudList)
-                {
-                    int width = int.Parse(xn.SelectSingleNode("width").InnerText);
-                    int height = int.Parse(xn.SelectSingleNode("height").InnerText);
-                    string data = xn.SelectSingleNode("data").InnerText;
-                  //  Global.CloudType type = (Global.CloudType)System.Enum.Parse(typeof(Global.CloudType), xn.SelectSingleNode("type").InnerText);
+                int width = int.Parse(xn.SelectSingleNode("width").InnerText);
+                int height = int.Parse(xn.SelectSingleNode("height").InnerText);
+                string data = xn.SelectSingleNode("data").InnerText;
+                //  Global.CloudType type = (Global.CloudType)System.Enum.Parse(typeof(Global.CloudType), xn.SelectSingleNode("type").InnerText);
 
-                    SunshineProperty property = new SunshineProperty();
-                    property.width = width;
-                    property.height = height;
-                    property.data = new int[width, height];
+                SunshineProperty property = new SunshineProperty();
+                property.width = width;
+                property.height = height;
+                property.data = new int[width, height];
 
-                    for (int i = 0; i < width; i++)
-                        for (int j = 0; j < height; j++)
-                        {
-                            property.data[i, j] = data[i * height + j] - '0';
-                        }
-                    sunshineList.Add(property);
-                }
-
+                for (int i = 0; i < width; i++)
+                    for (int j = 0; j < height; j++)
+                    {
+                        property.data[i, j] = data[i * height + j] - '0';
+                    }
+                sunshineList.Add(property);
             }
 
         }
+
     }
     void Sunshine()
     {

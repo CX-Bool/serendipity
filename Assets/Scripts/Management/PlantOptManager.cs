@@ -44,50 +44,47 @@ public class PlantOptManager : MonoBehaviour {
         middlePlants = new List<PlantProperty>();
         bigPlants = new List<PlantProperty>();
         optionList = new Dictionary<PlantProperty, List<Vector2Int>>();
-        string filepath = System.Environment.CurrentDirectory + "\\Assets\\Resources\\Plant.xml";
 
-        if (File.Exists(filepath))
-        {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(filepath);
-            if (xmlDoc != null)
+        XmlDocument xmlDoc = new XmlDocument();
+
+        xmlDoc.LoadXml(Resources.Load("Config/Plant").ToString());
+        if (xmlDoc != null)
+        { 
+            XmlNodeList cloudList = xmlDoc.SelectSingleNode("main").ChildNodes;
+            foreach (XmlNode xn in cloudList)
             {
-                XmlNodeList cloudList = xmlDoc.SelectSingleNode("main").ChildNodes;
-                foreach (XmlNode xn in cloudList)
+                int width = int.Parse(xn.SelectSingleNode("Width").InnerText);
+                int height = int.Parse(xn.SelectSingleNode("Height").InnerText);
+                int moisture = int.Parse(xn.SelectSingleNode("Moisture").InnerText);
+
+                Global.TemplateType templetType = (Global.TemplateType)System.Enum.Parse(typeof(Global.TemplateType), xn.SelectSingleNode("TemplateType").InnerText);
+                string tex = xn.SelectSingleNode("TextureName").InnerText;
+                Global.PlantType type = (Global.PlantType)System.Enum.Parse(typeof(Global.PlantType), xn.SelectSingleNode("Type").InnerText);
+
+                PlantProperty property = new PlantProperty();
+                property.width = width;
+                property.height = height;
+                property.type = type;
+                property.templateType = templetType;
+                property.texture = Resources.Load("Textures/" + tex) as Texture2D;
+                property.moisture = moisture;
+
+                switch(property.templateType)
                 {
-                    int width = int.Parse(xn.SelectSingleNode("Width").InnerText);
-                    int height = int.Parse(xn.SelectSingleNode("Height").InnerText);
-                    int moisture = int.Parse(xn.SelectSingleNode("Moisture").InnerText);
-
-                    Global.TemplateType templetType = (Global.TemplateType)System.Enum.Parse(typeof(Global.TemplateType), xn.SelectSingleNode("TemplateType").InnerText);
-                    string tex = xn.SelectSingleNode("TextureName").InnerText;
-                    Global.PlantType type = (Global.PlantType)System.Enum.Parse(typeof(Global.PlantType), xn.SelectSingleNode("Type").InnerText);
-
-                    PlantProperty property = new PlantProperty();
-                    property.width = width;
-                    property.height = height;
-                    property.type = type;
-                    property.templateType = templetType;
-                    property.texture = Resources.Load("Textures/" + tex) as Texture2D;
-                    property.moisture = moisture;
-
-                   switch(property.templateType)
-                    {
-                        case Global.TemplateType.SMALL_2_2:
-                            smallPlants.Add(property);
-                            break;
-                        case Global.TemplateType.MIDDLE_3_2:
-                            middlePlants.Add(property);
-                            break;
-                        case Global.TemplateType.BIG_3_3:
-                            bigPlants.Add(property);
-                            break;
-                    }
+                    case Global.TemplateType.SMALL_2_2:
+                        smallPlants.Add(property);
+                        break;
+                    case Global.TemplateType.MIDDLE_3_2:
+                        middlePlants.Add(property);
+                        break;
+                    case Global.TemplateType.BIG_3_3:
+                        bigPlants.Add(property);
+                        break;
                 }
-
             }
 
         }
+
     }
 
     public void PutBackOption(PlantProperty property)

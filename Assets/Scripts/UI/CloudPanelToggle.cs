@@ -1,12 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class CloudPanelToggle : MonoBehaviour {
 
+    #region 单例管理
+    private static CloudPanelToggle instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
+    public static CloudPanelToggle GetInstance()
+    {
+        return instance;
+    }
+    #endregion
     private int isHiding = 0;
     public float smoothing = 10f;
-    public GameObject cloudPanel;
+    public RawImage cloudPanel;
     private Vector3[] position;
     private Vector3 target;
     public Vector3 Target
@@ -28,9 +41,12 @@ public class CloudPanelToggle : MonoBehaviour {
     private void Start()
     {
         position = new Vector3[2];
-        position[1] = cloudPanel.transform.position - new Vector3(0, 300f, 0);
-        position[0] = cloudPanel.transform.position;
+        position[1] = cloudPanel.rectTransform.localPosition + new Vector3(0, -300f, 0);
+        position[0] = cloudPanel.rectTransform.localPosition + new Vector3(0, 0f, 0);
         PlantPanelToggle.PanelToggleHandle += ToggleHiding;
+        Debug.Log("coor--");
+
+        Debug.Log(cloudPanel.rectTransform.position);
 
     }
     public void Click()
@@ -43,17 +59,18 @@ public class CloudPanelToggle : MonoBehaviour {
     {
         isHiding = isHiding == 0 ? 1 : 0;
         Target = position[isHiding];
+        Debug.Log(position[isHiding]);
     }
     IEnumerator Movement(Vector3 target)
     {
 
-        while (Vector3.Distance(cloudPanel.transform.position, target) >= 1f)
+        while (Vector3.Distance(cloudPanel.rectTransform.localPosition, target) >= 1f)
         {
 
-            cloudPanel.transform.position = Vector3.Lerp(cloudPanel.transform.position, target, smoothing*Time.deltaTime);
+            cloudPanel.rectTransform.localPosition = Vector3.Lerp(cloudPanel.rectTransform.localPosition, target, smoothing*Time.deltaTime);
             yield return null;
 
         }
-       // cloudPanel.SetActive((isHiding==0));
+
     }
 }

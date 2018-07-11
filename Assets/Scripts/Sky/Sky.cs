@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 public class Sky : MonoBehaviour {
 
@@ -301,12 +302,19 @@ public class Sky : MonoBehaviour {
             for (int n = y; n > y-height; n--)
             {
                 grids[m, n].State = 0;
-                Instantiate(rainWater, grids[m, n].transform.position,Quaternion.Euler(Vector3.forward));
-                //Debug.LogFormat("x:{0},y:{1},active:{2}", m, n, grids[m, n].State);
+                StartCoroutine("Rain", grids[m, n].transform.position);
 
+                //Debug.LogFormat("x:{0},y:{1},active:{2}", m, n, grids[m, n].State);
             }
         }
 
+    }
+
+    IEnumerator Rain(Vector3 pos)
+    {
+        Instantiate(rainWater, pos, Quaternion.Euler(Vector3.forward));
+        yield return new WaitForSeconds(0.5f);
+        Instantiate(rainWater, pos, Quaternion.Euler(Vector3.forward));
     }
 }
 

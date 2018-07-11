@@ -26,7 +26,7 @@ namespace view
         #region 辅助变量
         private int optWidthOffset = 300;
         private int optHeightPos = 0;
-        private int centerPoint = 540;
+
         bool isCloudPanel = true;//当前显示的是否云彩菜单
         #endregion
 
@@ -46,16 +46,28 @@ namespace view
         // Use this for initialization
         void Start()
         {
+
             cloudOptionList = CloudOptManager.GetInstance().optionList;
             plantOptionList = PlantOptManager.GetInstance().optionList;
-
+            //cloudOptImageList = new List<RawImage>();
+            //plantOptImageList = new List<RawImage>();
             EnableSubscribe();
+            Debug.Log("HUDManager Start----1");
+            Debug.Log(cloudOptionList.Count);
+            Debug.Log(cloudOptImageList);
             UpdateCloudOption();
+            Debug.Log("set Sunshine 0");
 
-            sunshineObj.CrossFadeAlpha(0, 0, true);
+            StartCoroutine("InitialSunshine");
+            Debug.Log("set Sunshine 1");
         }
         // Update is called once per frame
-
+        //不知道为什么设置不成功，逼得我写了个这
+        IEnumerator InitialSunshine()
+        {
+            sunshineObj.CrossFadeAlpha(0, 0, true);
+            yield return null;
+        }
         private void EnableSubscribe()
         {
             CloudOptManager.optionChangeHandle += UpdateCloudOption;//选项变更时更新UI
@@ -65,7 +77,6 @@ namespace view
             CloudPanelToggle.PanelToggleHandle += TogglePanelFlag;
             PlantPanelToggle.PanelToggleHandle += TogglePanelFlag;
 
-            PlantOptManager.optionChangeHandle += ClearPlantOption;
             PlantOptManager.optionChangeHandle += UpdatePlantOption;
         }
 
@@ -75,6 +86,8 @@ namespace view
             for (int i = 0; i < cloudOptionList.Count; i++)
             {
                 cloudOptImageList[i].gameObject.SetActive(true);
+                Debug.Log("HUDManager Start----2");
+
                 cloudOptImageList[i].texture = cloudOptionList[i].texture;
                 cloudOptImageList[i].transform.localScale = new Vector3(cloudOptionList[i].width / 2f, (float)cloudOptionList[i].height/2f,  1);
                 cloudOptImageList[i].GetComponent<CloudOption>().imgNormalScale = cloudOptImageList[i].transform.localScale;
@@ -86,18 +99,17 @@ namespace view
                 cloudOptImageList[i].gameObject.SetActive(false);
             }
         }
-        private void ClearPlantOption()
-        {
-
-        }
+ 
         private void UpdatePlantOption()
         {
+            //clear plant option
             for (int i = 0; i < plantOptImageList.Count; i++)
             {
                 Destroy(plantOptImageList[i]);
             }
             plantOptImageList.Clear();
             int index = 0;
+            //generate plant option
             foreach (KeyValuePair<PlantProperty, List<Vector2Int>> item in plantOptionList)
             {
                 RawImage plantOption = Instantiate(plantOptPrefab, transform.localPosition, transform.rotation);

@@ -18,6 +18,12 @@ public class CameraMove : MonoBehaviour {
 
         }
     }
+    private void Start()
+    {
+        Screen.SetResolution(540, 960, false);
+     
+    }
+
     // Use this for initialization
     private void Update()
     {
@@ -27,7 +33,8 @@ public class CameraMove : MonoBehaviour {
         }
         if(Input.GetKeyDown(KeyCode.LeftArrow))
             Target = Quaternion.Euler(0, 0, 0);
-
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+            transform.position += new Vector3(0, 0, -1);
     }
 
     IEnumerator Movement(Quaternion target)
