@@ -24,9 +24,13 @@ public static class Global{
 
     public enum PlantType
     {
-        CHI_SMALL,//生成“气”的植物，小中大
-        CHI_MIDDLE,
-        CHI_BIG
+        CHI_one_normal,//虞美人
+        Keep_Moisture1,//丹木
+        Keep_Moisture2,//沙棠
+        CHI_two_normal,//祝余
+        CHI_two_special,//忘忧草（萱草）
+        Increase_Moisture,//大椿
+        CHI_one_super//梧桐
     }
     
     public enum TemplateType

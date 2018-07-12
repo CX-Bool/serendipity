@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class Plant : MonoBehaviour {
 
-    protected PlantProperty property;
-    protected int interval = 2;
+    public PlantProperty property;
+    protected int interval = 30;
 
 	// Use this for initialization
 	void Start () {
-        InvokeRepeating("Skill", interval, interval);
+        // InvokeRepeating("Skill", interval, interval);
+        Skill();
 	}
 
     protected virtual void Skill() { }

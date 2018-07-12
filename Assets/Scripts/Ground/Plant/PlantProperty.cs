@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlantProperty : TemplateProperty
 {
+    public string name;
     /// <summary>
     /// 图片
     /// </summary>

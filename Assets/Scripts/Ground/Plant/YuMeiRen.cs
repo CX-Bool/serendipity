@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlantChi:Plant {
+public class YuMeiRen : Plant {
 
     protected override void Skill()
     {

@@ -22,7 +22,7 @@ public class LevelManager : MonoBehaviour {
     #endregion
 
     #region 关卡数据
-    private int steps = 3;
+    private int steps = 300;
     public int Steps
     {
         get { return steps; }

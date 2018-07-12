@@ -67,7 +67,6 @@ public class Sky : MonoBehaviour {
         foreach(SkyHintGrid i in hoveringGrids)
         {
             i.HintState=hintAble;
-            i.material.color = Color.white;
         }
        
     }

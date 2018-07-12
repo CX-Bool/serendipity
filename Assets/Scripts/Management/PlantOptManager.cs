@@ -53,6 +53,7 @@ public class PlantOptManager : MonoBehaviour {
             XmlNodeList cloudList = xmlDoc.SelectSingleNode("main").ChildNodes;
             foreach (XmlNode xn in cloudList)
             {
+                string name = xn.SelectSingleNode("Name").InnerText;
                 int width = int.Parse(xn.SelectSingleNode("Width").InnerText);
                 int height = int.Parse(xn.SelectSingleNode("Height").InnerText);
                 int moisture = int.Parse(xn.SelectSingleNode("Moisture").InnerText);
@@ -62,6 +63,7 @@ public class PlantOptManager : MonoBehaviour {
                 Global.PlantType type = (Global.PlantType)System.Enum.Parse(typeof(Global.PlantType), xn.SelectSingleNode("Type").InnerText);
 
                 PlantProperty property = new PlantProperty();
+                property.name = name;
                 property.width = width;
                 property.height = height;
                 property.type = type;

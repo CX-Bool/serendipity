@@ -69,16 +69,13 @@ public class Ground : MonoBehaviour
     }
     private void Update()
     {
-        foreach (GroundHintGrid i in activeHints)
+        foreach (GroundHintGrid i in activeHints)//种植物的提示
         {
-            i.HintState = hintAble;
-            i.material.color = Color.white * 0.5f;
+            i.HintState = (GroundHintGrid.State)hintAble;
         }
-        foreach (GroundHintGrid i in skyHoveringGrids)
+        foreach (GroundHintGrid i in skyHoveringGrids)//云彩划过天空时的提示
         {
-            Debug.Log(i.position.x);
-            i.HintState = 2;
-            i.material.color = Color.white;
+            i.HintState = GroundHintGrid.State.SkyShadow;
         }
     }
     private void EnableSubscribe()
@@ -260,19 +257,22 @@ public class Ground : MonoBehaviour
     }
     private void GrowPlant(Vector2Int leftTop, PlantProperty plant)
     {
-        GameObject newPlant = new GameObject(plant.type.ToString());
+        plant.position = leftTop;
+        GameObject newPlant = new GameObject(plant.name.ToString());
         switch (plant.type)
         {
-            case Global.PlantType.CHI_SMALL:
-                newPlant.AddComponent<PlantChi>();
+            case Global.PlantType.CHI_one_normal:
+                newPlant.AddComponent<YuMeiRen>();
+                newPlant.GetComponent<YuMeiRen>().property = plant;
+                break;
+            case Global.PlantType.Keep_Moisture1:
+                newPlant.AddComponent<DanMu>();
+                newPlant.GetComponent<DanMu>().property = plant;
 
                 break;
-            case Global.PlantType.CHI_MIDDLE:
-                newPlant.AddComponent<PlantChi>();
-
-                break;
-            case Global.PlantType.CHI_BIG:
-                newPlant.AddComponent<PlantChi>();
+            case Global.PlantType.Keep_Moisture2:
+                newPlant.AddComponent<ShaTang>();
+                newPlant.GetComponent<ShaTang>().property = plant;
 
                 break;
             default:
@@ -304,7 +304,32 @@ public class Ground : MonoBehaviour
             }
         }
     }
-
+    public void AddIncreaseLock(int l,int r,int u,int d)
+    {
+        for(int i=l;i<r;i++)
+        {
+            for(int j=u;j<d;j++)
+            {
+                if (grids[i, j].State == 0)
+                {
+                    grids[i, j].AddIncreaseLock();
+                }
+            }
+        }
+    }
+    public void AddDecreaseLock(int l, int r, int u, int d)
+    {
+        for (int i = l; i < r; i++)
+        {
+            for (int j = u; j < d; j++)
+            {
+                if (grids[i, j].State == 0)
+                {
+                    grids[i, j].AddDecreaseLock();
+                }
+            }
+        }
+    }
     public void DragingOption(PlantProperty p, Vector2 leftTop)
     {
         Ray ray = Camera.main.ScreenPointToRay(leftTop);
@@ -437,14 +462,18 @@ public class Ground : MonoBehaviour
         {
             for (int j = property.position.y, n = 0; j < property.position.y + property.height; j++, n++)
             {
-                grids[i, j].Moisture -= property.data[m, n];
+                if(grids[i,j].increaseLock==false)
+                {
+                    grids[i, j].Moisture -= property.data[m, n];
+
+                }
             }
         }
     }
 
     public void AddHintGrid(int i, int j)
     {
-        Debug.Log(i);
+        //if(hints[i,j].HintState==GroundHintGrid.State.Empty)
         skyHoveringGrids.Add(hints[i, j]);
     }
     public void ClearHintState()
@@ -465,7 +494,7 @@ public static class List_GroundHintGrid_ExtensionMethods
     {
         foreach (GroundHintGrid i in options)
         {
-            i.HintState = -1;
+            i.HintState = GroundHintGrid.State.Empty;
         }
         options.Clear();
 

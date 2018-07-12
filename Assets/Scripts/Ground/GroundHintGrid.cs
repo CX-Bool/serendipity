@@ -4,22 +4,33 @@ using UnityEngine;
 
 public class GroundHintGrid : AbstractGrid {
 
+    public enum State{
+        
+        Abnormal,
+        Normal,
+        SkyShadow,
+        Empty
+    }
     /// <summary>
-    /// -1为空，0为异常（红色）hint,1为正常（绿色)hint,2为天空阴影
+
+    /// 0为异常（红色）hint
+    /// 1为正常（绿色)hint
+    /// 2为天空阴影
+    /// 3为空
     /// </summary>
-    private int hintState = 0;
-    public int HintState
+    private State hintState = State.Empty;
+    public State HintState
     {
         get { return hintState; }
         set
         {
             hintState = value;
-            if (hintState == -1)
+            if (hintState == State.Empty)
                 material.color = Color.clear;
             else
             {
                 material.color = Color.white*0.5f;
-                material.mainTexture = hintTextures[hintState];
+                material.mainTexture = hintTextures[(int)hintState];
             }
         }
     }
@@ -33,5 +44,7 @@ public class GroundHintGrid : AbstractGrid {
         hintTextures.Add(Resources.Load("Textures/hintUnavailable") as Texture2D);
         hintTextures.Add(Resources.Load("Textures/hintAvailable") as Texture2D);
         hintTextures.Add(Resources.Load("Textures/hintGround") as Texture2D);
+
     }
+  
 }
