@@ -19,7 +19,9 @@ public static class Global{
 
     public enum CloudType
     {
-        NORMAL//普通降雨的云彩块
+        NORMAL,//普通降雨的云彩块
+        NORMAL_1_1,//1*1的云彩
+        SPECIAL_3_3
     }
 
     public enum PlantType

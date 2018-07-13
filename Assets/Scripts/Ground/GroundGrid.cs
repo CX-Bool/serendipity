@@ -52,11 +52,12 @@ public class GroundGrid : AbstractGrid {
     }
     void UpdateTexture()
     {
-        if (increaseLock && state == 0)
-            material.mainTexture = textures[7];
-        else if (decreaseLock && state == 0)
-            material.mainTexture = textures[8];
-        else if (state == 0)
+        //if (increaseLock && state == 0)
+        //    material.mainTexture = textures[7];
+        //else if (decreaseLock && state == 0)
+        //    material.mainTexture = textures[8];
+        //else 
+        if (state == 0)
             material.mainTexture = textures[moisture + 1];
     }
     public override void InitTextures()

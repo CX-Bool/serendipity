@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+
 namespace view
 {
     public class HUDManager : MonoBehaviour
@@ -81,7 +82,8 @@ namespace view
         //CloudOption是重复使用的，每次调用只是设置是否可见，放回正确位置
         private void UpdateCloudOption()
         {
-            for (int i = 0; i < cloudOptionList.Count; i++)
+            int count = cloudOptionList.Count>CloudOptManager.GetInstance().maxNum? CloudOptManager.GetInstance().maxNum: cloudOptionList.Count;
+            for (int i = 0; i < count; i++)
             {
                 cloudOptImageList[i].gameObject.SetActive(true);
                 Debug.Log("HUDManager Start----2");
@@ -92,7 +94,7 @@ namespace view
                 cloudOptImageList[i].GetComponent<CloudOption>().imgReduceScale = cloudOptImageList[i].transform.localScale * 1.2f;
                 cloudOptImageList[i].transform.localPosition = new Vector3(optWidthOffset * (i - 1), optHeightPos, 0);
             }
-            for (int i = cloudOptionList.Count; i < CloudOptManager.GetInstance().maxNum; i++)
+            for (int i = count; i < CloudOptManager.GetInstance().maxNum; i++)
             {
                 cloudOptImageList[i].gameObject.SetActive(false);
             }

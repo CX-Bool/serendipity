@@ -42,7 +42,7 @@ public class CloudPanelToggle : MonoBehaviour {
     {
         position = new Vector3[2];
         position[1] = cloudPanel.rectTransform.localPosition + new Vector3(0, -300f, 0);
-        position[0] = cloudPanel.rectTransform.localPosition + new Vector3(0, 0f, 0);
+        position[0] = cloudPanel.rectTransform.localPosition + new Vector3(0, 0, 0);
         PlantPanelToggle.PanelToggleHandle += ToggleHiding;
         Debug.Log("coor--");
 

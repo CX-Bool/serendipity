@@ -40,6 +40,14 @@ public class Sky : MonoBehaviour {
     private SkyHintGrid[,] hints;
     #endregion
 
+    #region 委托
+    public delegate void Skill(int i,int j);
+    /// <summary>
+    /// 1、通知HUDManager销毁当前UI并更新Options
+    /// 2、通知Sky有一块云彩被放置了
+    /// </summary>
+    public static Skill UseSkill;
+    #endregion
     Vector3 debugHitPoint;
 
     // Use this for initialization
@@ -109,6 +117,7 @@ public class Sky : MonoBehaviour {
     private void DragingOption(CloudProperty c,Vector2 leftTop)
     {
         Ray ray = Camera.main.ScreenPointToRay(leftTop);
+        
 
         RaycastHit hit;
 
@@ -230,17 +239,29 @@ public class Sky : MonoBehaviour {
 
         if (destroyOption)
         {
+            c.EnableSubscribe();
             //拖动成功，消除原来的选项
             CloudOptManager.GetInstance().RemoveOption(c);
-            for (int i = 0; i < c.width; i++)
+
+            if(UseSkill==null)
             {
-                for (int j = 0; j < c.height; j++)//注意pos.y是上大下小
+                //Normal skill
+                for (int i = 0; i < c.width; i++)
                 {
-                    if(c.data[i, j] == 1)
-                     grids[pos.x + i, pos.y - j].State = 1;
+                    for (int j = 0; j < c.height; j++)//注意pos.y是上大下小
+                    {
+                        if (c.data[i, j] == 1)
+                            grids[pos.x + i, pos.y - j].State = 1;
+                    }
                 }
+                TemplateMatch(left, right, top, bottom);
             }
-            TemplateMatch(left,right,top,bottom);
+            else
+            {
+                //Special skill
+                UseSkill(pos.x, pos.y);
+            }
+            c.DisableSubscribe();
         }
         else
         {
@@ -286,7 +307,6 @@ public class Sky : MonoBehaviour {
                     {
                         RainFall(i,j,width,height);
 
-                        Ground.GetInstance().RainFall(i, j, width, height);
                         Ground.GetInstance().UpdatePlantOption();
                     }
                 }
@@ -294,8 +314,7 @@ public class Sky : MonoBehaviour {
         }
     }
     /// <summary>
-    /// 降雨
-    /// 通知ground加湿
+    /// 降雨 通知ground加湿
     /// </summary>
     /// <param name="x">区域左上角坐标</param>
     /// <param name="y">区域左上角坐标</param>
@@ -310,12 +329,20 @@ public class Sky : MonoBehaviour {
                 grids[m, n].State = 0;
                 StartCoroutine("Rain", grids[m, n].transform.position);
 
-                //Debug.LogFormat("x:{0},y:{1},active:{2}", m, n, grids[m, n].State);
             }
         }
+        Ground.GetInstance().ChangeMoisture(x, y, width, height, 1);
 
     }
+    public void RainFall(int x,int y,int val)
+    {
+        if (grids[x, y].State == 0)
+            return;
+        grids[x, y].State = 0;
+        StartCoroutine("Rain", grids[x, y].transform.position);
+        Ground.GetInstance().ChangeMoisture(x, y, val);
 
+    }
     IEnumerator Rain(Vector3 pos)
     {
         Instantiate(rainWater, pos, Quaternion.Euler(Vector3.forward));

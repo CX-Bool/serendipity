@@ -25,7 +25,10 @@ public class CloudProperty//选项
     /// <summary>
     /// 云彩类型
     /// </summary>
-    public Global.CloudType type = Global.CloudType.NORMAL;
+    public Global.CloudType type;
+
+    public virtual void EnableSubscribe() { }
+    public virtual void DisableSubscribe() { }
 
 
 }

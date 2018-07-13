@@ -10,9 +10,11 @@ public class Plant : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         // InvokeRepeating("Skill", interval, interval);
+        PrePare();
         Skill();
 	}
 
     protected virtual void Skill() { }
+    protected virtual void PrePare() { }
 
 }

@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
-  imgReduceScale: {x: 0.8, y: 0.8, z: 1}
+  imgReduceScale: {x: 1.2, y: 1.2, z: 1}
   imgNormalScale: {x: 1, y: 1, z: 1}
 --- !u!114 &114963898649885010
 MonoBehaviour:

@@ -268,16 +268,28 @@ public class Ground : MonoBehaviour
             case Global.PlantType.Keep_Moisture1:
                 newPlant.AddComponent<DanMu>();
                 newPlant.GetComponent<DanMu>().property = plant;
-
                 break;
             case Global.PlantType.Keep_Moisture2:
                 newPlant.AddComponent<ShaTang>();
                 newPlant.GetComponent<ShaTang>().property = plant;
+                break;
+            case Global.PlantType.CHI_two_normal:
+                newPlant.AddComponent<ZhuYu>();
+                newPlant.GetComponent<ZhuYu>().property = plant;
+                break;
+            case Global.PlantType.CHI_two_special:
+                newPlant.AddComponent<XuanCao>();
+                newPlant.GetComponent<XuanCao>().property = plant;
+                break;
+            case Global.PlantType.Increase_Moisture:
+                newPlant.AddComponent<DaChun>();
+                newPlant.GetComponent<DaChun>().property = plant;
+                break;
+            case Global.PlantType.CHI_one_super:
+                newPlant.AddComponent<WuTong>();
+                newPlant.GetComponent<WuTong>().property = plant;
+                break;
 
-                break;
-            default:
-                newPlant.AddComponent<Plant>();
-                break;
         }
         plantList.Add(newPlant);
 
@@ -292,18 +304,7 @@ public class Ground : MonoBehaviour
 
 
     }
-    public void RainFall(int x, int y, int width, int height)
-    {
-        for (int m = x; m < x + width; m++)
-        {
-            for (int n = y; n > y - height; n--)
-            {
-                grids[m, n].Moisture += 1;
-                //Debug.LogFormat("ground：x:{0},y:{1}", m, n);
-
-            }
-        }
-    }
+    
     public void AddIncreaseLock(int l,int r,int u,int d)
     {
         for(int i=l;i<r;i++)
@@ -470,7 +471,21 @@ public class Ground : MonoBehaviour
             }
         }
     }
+    public void ChangeMoisture(int x, int y, int width, int height,int val)
+    {
+        for (int m = x; m < x + width; m++)
+        {
+            for (int n = y; n > y - height; n--)
+            {
+                grids[m, n].Moisture += val;
 
+            }
+        }
+    }
+    public void ChangeMoisture(int x,int y,int value)
+    {
+        grids[x, y].Moisture += value;
+    }
     public void AddHintGrid(int i, int j)
     {
         //if(hints[i,j].HintState==GroundHintGrid.State.Empty)
