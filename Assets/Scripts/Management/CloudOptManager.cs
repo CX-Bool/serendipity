@@ -122,8 +122,8 @@ public class CloudOptManager : MonoBehaviour {
     }
     public CloudProperty RandomNewCloud(Global.CloudType type = Global.CloudType.NORMAL)
     {
-        if (options.Count == 0)
-            return null;
+        //if (options.Count == 0)
+        //    return null;
 
         if (type == Global.CloudType.NORMAL)
         {
@@ -145,6 +145,7 @@ public static class List_CloudProperty_ExtensionMethods
     /// <param name="cloud">真正的参数，要添加到list中的item</param>
     public static void AddAndNotify(this List<CloudProperty> options,CloudProperty cloud)
     {
+       
         options.Add(cloud);
 
         //CloudOptManager.optionChangeHandle.Method;  

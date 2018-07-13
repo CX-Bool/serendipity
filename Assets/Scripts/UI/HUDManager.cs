@@ -36,6 +36,7 @@ namespace view
 
         #region UI资源
         public Text steps;
+        public Text score;
         public Text floatingTextPrefab;
         /// <summary>
         /// option的图片资源
@@ -148,6 +149,11 @@ namespace view
         {
             steps.text = LevelManager.GetInstance().Steps.ToString();
         }
+        public void SetScore()
+        {
+            score.text = LevelManager.GetInstance().Score.ToString();
+        }
+
         private void TogglePanelFlag()
         { isCloudPanel = !isCloudPanel; }
 

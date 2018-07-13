@@ -3,7 +3,7 @@
   <Plant>
     <Name>虞美人</Name>
     <Type>CHI_one_normal</Type>
-    <comment>技能描述：生成一朵随机形状的云</comment>
+    <comment>生成一朵随机形状的云</comment>
     <Width>2</Width>
     <Height>2</Height>
     <TemplateType>SMALL_2_2</TemplateType>
@@ -14,7 +14,7 @@
   <Plant>
     <Name>丹木</Name>
     <Type>Keep_Moisture1</Type>
-    <comment>技能描述：防火防干旱，使左右各四格湿度不再受随机阳光影响，即湿度不会再下降</comment>
+    <comment>防火防干旱，使左右各四格湿度不再受随机阳光影响，即湿度不会再下降</comment>
     <Width>2</Width>
     <Height>2</Height>
     <TemplateType>SMALL_2_2</TemplateType>
@@ -25,7 +25,7 @@
   <Plant>
     <Name>沙棠</Name>
     <Type>Keep_Moisture2</Type>
-    <comment>技能描述：防水防涝，使左右各四格湿度不再受降雨影响，即湿度不会再上升</comment>
+    <comment>防水防涝，使左右各四格湿度不再受降雨影响，即湿度不会再上升</comment>
     <Width>2</Width>
     <Height>2</Height>
     <TemplateType>SMALL_2_2</TemplateType>
@@ -36,7 +36,7 @@
   <Plant>
     <Name>祝余</Name>
     <Type>CHI_two_normal</Type>
-    <comment>技能描述：生成两朵随机形状的云</comment>
+    <comment>生成两朵随机形状的云</comment>
     <Width>3</Width>
     <Height>2</Height>
     <TemplateType>MIDDLE_3_2</TemplateType>
@@ -47,7 +47,7 @@
   <Plant>
     <Name>忘忧草（萱草）</Name>
     <Type>CHI_two_special</Type>
-    <comment>技能描述：生成两朵1*1的云</comment>
+    <comment>生成两朵1*1的云</comment>
     <Width>3</Width>
     <Height>2</Height>
     <TemplateType>MIDDLE_3_2</TemplateType>
@@ -58,7 +58,7 @@
   <Plant>
       <Name>大椿</Name>
       <Type>Increase_Moisture</Type>
-      <comment>技能描述：左右各6格湿度+2（总共12格）</comment>
+      <comment>左右各6格湿度+2（总共12格）</comment>
       <Width>3</Width>
       <Height>3</Height>
       <TemplateType>BIG_3_3</TemplateType>
@@ -69,7 +69,7 @@
   <Plant>
       <Name>梧桐</Name>
       <Type>CHI_one_super</Type>
-      <comment>技能描述：生成一朵1*1的云，效果为消除以其为中心3*3区域内所有的格子，对应区域地面格子湿度+2</comment>
+      <comment>生成一朵1*1的云，效果为消除以其为中心3*3区域内所有的格子，对应区域地面格子湿度+2</comment>
       <Width>3</Width>
       <Height>3</Height>
       <TemplateType>BIG_3_3</TemplateType>

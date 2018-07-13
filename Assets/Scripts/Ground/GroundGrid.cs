@@ -7,7 +7,10 @@ public class GroundGrid : AbstractGrid {
     //state属性的访问控制
     public int State
     {
-        get { return state; }
+        get {
+            if (unable) return 1;
+            return state;
+        }
         set
         {
             state = value;
@@ -22,14 +25,21 @@ public class GroundGrid : AbstractGrid {
         get { return moisture; }
         set
         {
+            if (unable)
+                return;
+            LevelManager.GetInstance().Score += value - moisture;
+
             moisture = value;
             if (moisture <= Global.lowestMoisture)
             {
                 moisture = Global.lowestMoisture;
                 //game over
             }
-            if (moisture >= Global.highestMoisture)
+            if (moisture > Global.highestMoisture)
+            {
                 moisture = Global.highestMoisture;
+                unable = true;
+            }
 
             UpdateTexture();
         }
@@ -37,6 +47,7 @@ public class GroundGrid : AbstractGrid {
 
     public bool increaseLock = false;//湿度不能再上升
     public bool decreaseLock= false;//湿度不能再下降
+    private bool unable = false;//湿度超了之后这块土地就不再可用了
     //变干的速率
     private int dryRate = 50;
     public static List<Texture2D> textures;

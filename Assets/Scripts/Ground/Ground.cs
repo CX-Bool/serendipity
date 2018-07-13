@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Ground : MonoBehaviour
 {
     #region 单例管理
@@ -475,7 +476,7 @@ public class Ground : MonoBehaviour
     {
         for (int m = x; m < x + width; m++)
         {
-            for (int n = y; n > y - height; n--)
+            for (int n = y; n < y + height; n++)
             {
                 grids[m, n].Moisture += val;
 

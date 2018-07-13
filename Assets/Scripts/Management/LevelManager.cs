@@ -37,7 +37,16 @@ public class LevelManager : MonoBehaviour {
             }
         }
     }
-
+    private int score = 60;
+    public int Score
+    {
+        get { return score; }
+        set
+        {
+            score = value;
+            view.HUDManager.GetInstance().SetScore();
+        }
+    }
     int interval=70;
     List<SunshineProperty> sunshineList;
     #endregion
