@@ -293,7 +293,7 @@ public class Ground : MonoBehaviour
 
         }
         plantList.Add(newPlant);
-
+        
         for (int i = leftTop.x; i < leftTop.x + plant.width; i++)
         {
             for (int j = leftTop.y; j < leftTop.y + plant.height; j++)
@@ -342,7 +342,10 @@ public class Ground : MonoBehaviour
 
         hintAble = -1;
         activeHints.ClearHintState();
-
+        if(Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("UI")))
+        {
+           //
+        }
         if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("GroundHint")))
         {
             // 打印射线检测到的物体的名称  
@@ -476,7 +479,7 @@ public class Ground : MonoBehaviour
     {
         for (int m = x; m < x + width; m++)
         {
-            for (int n = y; n < y + height; n++)
+            for (int n = y; n > y - height; n--)
             {
                 grids[m, n].Moisture += val;
 

@@ -3,46 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using view;
 
-public class Option : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler,
-    IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+public class PlantPanel : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler,IEndDragHandler
 {
-    //private static Option instance;
-    //private void Awake()
-    //{
-    //    instance = this;
-    //  //  EnableSubscribe();
-    //}
-
-    //public static Option GetInstance()
-    //{
-    //    return instance;
-    //}
-    #region 拖动相关辅助变量
     public RectTransform canvas;          //得到canvas的ugui坐标
-    protected RectTransform imgRect;        //得到图片的ugui坐标
-    protected RawImage image;                 //图片
-
     protected Vector2 offset = new Vector3();    //用来得到鼠标和图片的差值
-    public Vector3 imgReduceScale = new Vector3(1.2f, 1.2f, 1);   //设置图片缩放
-    public Vector3 imgNormalScale = new Vector3(1, 1, 1);   //正常大小
+    protected RectTransform imgRect;        //得到图片的ugui坐标
 
+    public Vector2 left, right;
 
-    protected Vector2 leftTop;//当前在拖动的图片的左上角
-    protected Vector2 imageOffset;//图片左上角到图片中心的偏移量
-    #endregion
-    // Use this for initialization
     void Start()
     {
         imgRect = GetComponent<RectTransform>();
-        image = GetComponent<RawImage>();
+        left = right = imgRect.anchoredPosition;
     }
-
-    protected virtual void InitSeletedItem() { }
-    protected virtual void Draging(Vector2 mousePos) { }
-    protected virtual void EndDrag() { }
-
     //当鼠标按下时调用 接口对应  IPointerDownHandler
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -59,13 +33,13 @@ public class Option : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
             //计算图片中心和鼠标点的差值
             offset = imgRect.anchoredPosition - mouseUguiPos;
         }
-        
-        InitSeletedItem();
+
     }
-    
+
     //当鼠标拖动时调用   对应接口 IDragHandler
     public void OnDrag(PointerEventData eventData)
     {
+
         Vector2 mouseDrag = eventData.position;   //当鼠标拖动时的屏幕坐标
         Vector2 uguiPos = new Vector2();   //用来接收转换后的拖动坐标
         //和上面类似
@@ -74,9 +48,8 @@ public class Option : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
         if (isRect)
         {
             //设置图片的ugui坐标与鼠标的ugui坐标保持不变
-            imgRect.anchoredPosition = offset + uguiPos;
+            imgRect.anchoredPosition = new Vector2(offset.x + uguiPos.x,imgRect.anchoredPosition.y);
         }
-        Draging(mouseDrag);
     }
 
     //当鼠标抬起时调用  对应接口  IPointerUpHandler
@@ -89,19 +62,14 @@ public class Option : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
     public void OnEndDrag(PointerEventData eventData)
     {
         offset = Vector2.zero;
-        EndDrag();
-    }
+        //if (imgRect.anchoredPosition.x > right.x)
+        //{
+        //    gameObject.GetComponent<PutBackOption>().Target = right;
+        //}
+        //if (imgRect.anchoredPosition.x < left.x)
+        //{
+        //    gameObject.GetComponent<PutBackOption>().Target = left;
 
-    //当鼠标进入图片时调用   对应接口   IPointerEnterHandler
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        imgRect.localScale = imgReduceScale;   //缩小图片
+        //}
     }
-
-    //当鼠标退出图片时调用   对应接口   IPointerExitHandler
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        imgRect.localScale = imgNormalScale;   //回复图片
-    }
-
 }

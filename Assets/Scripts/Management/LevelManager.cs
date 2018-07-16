@@ -33,7 +33,8 @@ public class LevelManager : MonoBehaviour {
             view.HUDManager.GetInstance().SetSteps();
             if (steps == 0)
             {
-                Time.timeScale = 0;
+                
+                view.HUDManager.GetInstance().GameOver();
             }
         }
     }
@@ -45,6 +46,10 @@ public class LevelManager : MonoBehaviour {
         {
             score = value;
             view.HUDManager.GetInstance().SetScore();
+            if(score==0)
+            {
+                view.HUDManager.GetInstance().GameOver();
+            }
         }
     }
     int interval=70;

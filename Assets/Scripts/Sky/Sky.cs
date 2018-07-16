@@ -49,7 +49,7 @@ public class Sky : MonoBehaviour {
     public static Skill UseSkill;
     #endregion
     Vector3 debugHitPoint;
-
+    Vector3 debugDir;
     // Use this for initialization
     void Start () {
         wNum = Global.HorizonalGridNum;
@@ -76,7 +76,8 @@ public class Sky : MonoBehaviour {
         {
             i.HintState=hintAble;
         }
-       
+        Debug.DrawLine(Camera.main.transform.position, debugHitPoint,Color.red); Ray ray;
+        Debug.DrawRay(Camera.main.transform.position,debugDir,Color.green);
     }
     private void EnableSubscribe()
     {
@@ -117,8 +118,8 @@ public class Sky : MonoBehaviour {
     private void DragingOption(CloudProperty c,Vector2 leftTop)
     {
         Ray ray = Camera.main.ScreenPointToRay(leftTop);
-        
 
+        debugDir = ray.direction;
         RaycastHit hit;
 
         Vector2Int pos;
@@ -131,7 +132,8 @@ public class Sky : MonoBehaviour {
         {
             // 打印射线检测到的物体的名称  
             //Debug.Log("射线检测到的物体名称: " + hit.transform.name);
-
+            debugHitPoint = hit.point;
+            
             pos = hit.transform.GetComponent<SkyHintGrid>().position;//图片左上角碰撞到的格子的坐标
 
             //如果块没有全部包含在棋盘里，一定提示异常
@@ -197,7 +199,7 @@ public class Sky : MonoBehaviour {
 
         if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("Sky")))
         {
-            debugHitPoint = hit.point;
+            
 
             // 打印射线检测到的物体的名称  
             //Debug.Log("射线检测到的物体名称: " + hit.transform.name);

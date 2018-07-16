@@ -37,11 +37,11 @@ public class PlantOption : Option
 
     //不一定被点到，所以有些东西被点到后再初始化
     protected override void InitSeletedItem() {
-        imageOffset = new Vector3(-image.rectTransform.rect.width * 0.5f, image.rectTransform.rect.height * 0.5f,0);
+        imageOffset = new Vector2(-image.rectTransform.rect.width * 0.5f, image.rectTransform.rect.height * 0.5f);
     }
     protected override void Draging(Vector2 mousePos)
     {
-        leftTop = image.rectTransform.position + imageOffset;
+        leftTop = new Vector2(image.rectTransform.position.x, image.rectTransform.position.y) + imageOffset*0.5f;
 
         DragingHandle(plantProperty, leftTop);//通知地面，提示可以放置植物的位置
     }
@@ -50,7 +50,7 @@ public class PlantOption : Option
     {
 
         //传递图片左上角位置，注意有可能上下边沿超出
-        EndDragHandle(plantProperty, leftTop);//通知sky
+        EndDragHandle(plantProperty, leftTop);//通知ground
     }
 
 }

@@ -45,6 +45,8 @@ namespace view
         public List<RawImage> plantOptImageList;
         public RawImage plantOptPrefab;
         public RawImage sunshineObj;
+        public RawImage gameoverCanvas;
+        public RawImage plantPanel;
         #endregion
         // Use this for initialization
         void Start()
@@ -106,7 +108,14 @@ namespace view
             //clear plant option
             for (int i = 0; i < plantOptImageList.Count; i++)
             {
-                Destroy(plantOptImageList[i]);
+                RawImage p = plantOptImageList[i];
+                plantOptImageList.RemoveAt(i);
+                for (int j = 0; j < p.transform.childCount; j++)
+                {
+                    Destroy(p.transform.GetChild(j).gameObject);
+                }
+                Destroy(p.gameObject);
+                p = null;
             }
             plantOptImageList.Clear();
             int index = 0;
@@ -119,22 +128,30 @@ namespace view
                 plantOption.GetComponent<PlantOption>().canvas = transform.GetComponent<RectTransform>();
                 plantOption.transform.SetParent(transform.Find("PlantPanel"));
                 plantOption.transform.localPosition = new Vector3(optWidthOffset * (index - 1), optHeightPos, 0);
+                plantOption.transform.localScale = new Vector3(1,1,1);
 
                 plantOption.GetComponent<PlantOption>().plantProperty = item.Key;
                 plantOption.GetComponent<PlantOption>().position = item.Value;
+                plantOption.GetComponentInChildren<Text>().text = item.Key.name;
 
                 plantOptImageList.Add(plantOption);
+
                 index++;
             }
+            //plantPanel.GetComponent<PlantPanel>().right.x =  plantOptImageList[plantOptImageList.Count-1].rectTransform.anchoredPosition.x;
         }
 
 
         public void PutBackOption()
+
         {
+            
             if (isCloudPanel)
             {
                 for (int i = 0; i < cloudOptionList.Count; i++)
+                {
                     cloudOptImageList[i].gameObject.GetComponent<PutBackOption>().Target = new Vector3(optWidthOffset * (i - 1), optHeightPos, 0);
+                }
             }
             else
             {
@@ -178,6 +195,12 @@ namespace view
             Text t=Instantiate(floatingTextPrefab, position, rotation);
             t.GetComponent<FloatingText>().SetText(text, Color.green);
             t.transform.SetParent(steps.transform);
+        }
+
+        public void GameOver()
+        {
+            Time.timeScale = 0;
+            gameoverCanvas.gameObject.SetActive(true);
         }
     }
 

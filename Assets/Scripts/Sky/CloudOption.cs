@@ -47,12 +47,13 @@ public class CloudOption : Option
         //imgReduceScale = (256f/imgRect.rect.width);
         //imgNormalScale = (256f/imgRect.rect.width);
 
-        imageOffset = new Vector3(-image.rectTransform.rect.width * 0.5f*image.rectTransform.localScale.x, 
-            image.rectTransform.rect.height * 0.5f * image.rectTransform.localScale.y, 0);
+        imageOffset = new Vector2(-image.rectTransform.rect.width * 0.5f*image.rectTransform.localScale.x, 
+            image.rectTransform.rect.height * 0.5f * image.rectTransform.localScale.y);
     }
    
     protected override void Draging(Vector2 mousePos) {
-        leftTop = image.rectTransform.position + imageOffset;
+        leftTop = new Vector2(image.rectTransform.position.x, image.rectTransform.position.y) + imageOffset * 0.5f ;
+        //Debug.Log(leftTop);
         DragingHandle(cloudProperty, leftTop);//通知天空，划过的区域产生特效等
     }
 

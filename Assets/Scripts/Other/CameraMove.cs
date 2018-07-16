@@ -20,7 +20,7 @@ public class CameraMove : MonoBehaviour {
     }
     private void Start()
     {
-        Screen.SetResolution(1080, 1920, false);
+      //  Debug.LogFormat("{0}",Screen.width);
      
     }
 
