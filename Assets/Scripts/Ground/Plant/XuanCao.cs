@@ -7,6 +7,7 @@ public class XuanCao : Plant {
     {
         base.Skill();
 
-        CloudOptManager.GetInstance().optionList.Add(CloudOptManager.GetInstance().specialOptions[Global.CloudType.NORMAL_1_1]);
+        CloudOptManager.GetInstance().OpenNormal_1_1();
+        //CloudOptManager.GetInstance().optionList.Add(CloudOptManager.GetInstance().specialOptions[Global.CloudType.NORMAL_1_1]);
     }
 }

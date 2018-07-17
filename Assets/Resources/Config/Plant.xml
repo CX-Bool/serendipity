@@ -52,7 +52,7 @@
     <Height>2</Height>
     <TemplateType>MIDDLE_3_2</TemplateType>
     <TextureName>chiSmall</TextureName>
-    <Moisture>5</Moisture>
+    <Moisture>1</Moisture>
   </Plant>
 
   <Plant>
@@ -74,6 +74,6 @@
       <Height>3</Height>
       <TemplateType>BIG_3_3</TemplateType>
       <TextureName>chiSmall</TextureName>
-      <Moisture>5</Moisture>
+      <Moisture>1</Moisture>
    </Plant>
 </main>

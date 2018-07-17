@@ -25,25 +25,37 @@ public class GroundGrid : AbstractGrid {
         get { return moisture; }
         set
         {
-            if (unable)
+            if (unable||state==1)
                 return;
                 
             if (increaseLock && value > moisture) return;
             if (decreaseLock && value < moisture) return;
 
-            LevelManager.GetInstance().Score += value - moisture;
-
-            moisture = value;
-            if (moisture <= Global.lowestMoisture)
+            if (value < Global.lowestMoisture)
             {
                 moisture = Global.lowestMoisture;
                 LevelManager.GetInstance().Score -= 10;
             }
-            if (moisture >= Global.highestMoisture)
+            if (value > Global.highestMoisture)
             {
-                moisture = Global.highestMoisture+1;
-                LevelManager.GetInstance().Score -= 5;
-                unable = true;
+                moisture = Global.highestMoisture;
+                LevelManager.GetInstance().Score -= 1;
+            }
+
+            if (moisture == Global.lowestMoisture && value > moisture) 
+            {
+                LevelManager.GetInstance().Score += 10;
+            }
+            if (moisture == Global.highestMoisture && value < moisture)
+            {
+                LevelManager.GetInstance().Score += 1;
+            }
+
+            if (value > Global.lowestMoisture && value < Global.highestMoisture)
+            {
+                LevelManager.GetInstance().Score += value - moisture;
+                moisture = value;
+
             }
 
             UpdateTexture();

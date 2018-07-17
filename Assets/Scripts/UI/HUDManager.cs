@@ -106,10 +106,10 @@ namespace view
         private void UpdatePlantOption()
         {
             //clear plant option
-            for (int i = 0; i < plantOptImageList.Count; i++)
+            while(plantOptImageList.Count>0)
             {
-                RawImage p = plantOptImageList[i];
-                plantOptImageList.RemoveAt(i);
+                RawImage p = plantOptImageList[0];
+                plantOptImageList.RemoveAt(0);
                 for (int j = 0; j < p.transform.childCount; j++)
                 {
                     Destroy(p.transform.GetChild(j).gameObject);
@@ -199,8 +199,8 @@ namespace view
 
         public void GameOver()
         {
-            Time.timeScale = 0;
-            gameoverCanvas.gameObject.SetActive(true);
+        //    Time.timeScale = 0;
+        //    gameoverCanvas.gameObject.SetActive(true);
         }
     }
 

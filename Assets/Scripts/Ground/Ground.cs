@@ -409,7 +409,7 @@ public class Ground : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(leftTop);
         if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("Ground")))
         {
-            activeHints.ClearHintState();
+            //activeHints.ClearHintState();
             //debugHitPoint = hit.point;
 
             // 打印射线检测到的物体的名称  
@@ -474,6 +474,7 @@ public class Ground : MonoBehaviour
                 }
             }
         }
+        UpdatePlantOption();
     }
     public void ChangeMoisture(int x, int y, int width, int height,int val)
     {

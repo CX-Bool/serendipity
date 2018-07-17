@@ -8,7 +8,7 @@ public static class Global{
    
     #region 定义棋盘格子数
     public static int HorizonalGridNum = 12;
-    public static int VerticalGridNum = 5;
+    public static int VerticalGridNum = 6;
     #endregion
 
     #region 定义湿度

@@ -24,7 +24,7 @@ public class CloudOptManager : MonoBehaviour {
     }
     #endregion
 
-    
+
     /// <summary>
     /// OptionsChange用于选项列表发生变化时，1 通知HUDManager更新UI
     /// 2 向option的gameObject传递cloudProperty
@@ -40,9 +40,9 @@ public class CloudOptManager : MonoBehaviour {
     public int maxNum = 3;//最多同时有三个选项
     //private int insertIndex = 0;//当前要插入选项的位置
     public List<CloudProperty> optionList;//选项
-   
+
     // Use this for initialization
-    void Start () {
+    void Start() {
         options = new List<CloudProperty>();
         optionList = new List<CloudProperty>();
         specialOptions = new Dictionary<Global.CloudType, CloudProperty>();
@@ -56,10 +56,10 @@ public class CloudOptManager : MonoBehaviour {
 
     private void ReloadOption()
     {
-        if (optionList.Count >= maxNum|| LevelManager.GetInstance().Steps == 0)
+        if (optionList.Count >= maxNum || LevelManager.GetInstance().Steps == 0)
             return;
         optionList.AddAndNotify(RandomNewCloud());
-      
+
     }
     public void RemoveOption(CloudProperty cloudProperty)
     {
@@ -91,10 +91,10 @@ public class CloudOptManager : MonoBehaviour {
                 Global.CloudType type = (Global.CloudType)System.Enum.Parse(typeof(Global.CloudType), xn.SelectSingleNode("type").InnerText);
 
                 CloudProperty cloudProperty = null;
-                switch(type)
+                switch (type)
                 {
                     case Global.CloudType.SPECIAL_3_3:
-                        cloudProperty  = new CloudProperty_Special_3_3();
+                        cloudProperty = new CloudProperty_Special_3_3();
                         break;
                     default:
                         cloudProperty = new CloudProperty();
@@ -104,7 +104,7 @@ public class CloudOptManager : MonoBehaviour {
                 cloudProperty.width = width;
                 cloudProperty.height = height;
                 cloudProperty.data = new int[width, height];
-                cloudProperty.texture= Resources.Load("Textures/"+ tex) as Texture2D;
+                cloudProperty.texture = Resources.Load("Textures/" + tex) as Texture2D;
                 cloudProperty.type = type;
                 for (int i = 0; i < width; i++)
                     for (int j = 0; j < height; j++)
@@ -133,6 +133,13 @@ public class CloudOptManager : MonoBehaviour {
         {
             return specialOptions[type];
         }
+    }
+    /// <summary>
+    /// 开放使用1*1的块
+    /// </summary>
+    public void OpenNormal_1_1()
+    {
+        options.Add(specialOptions[Global.CloudType.NORMAL_1_1]);
     }
 }
 

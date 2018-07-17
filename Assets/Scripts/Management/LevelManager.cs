@@ -31,10 +31,10 @@ public class LevelManager : MonoBehaviour {
             
             steps = value;
             view.HUDManager.GetInstance().SetSteps();
-            if (steps == 0)
+            if (steps <= 0)
             {
                 
-                view.HUDManager.GetInstance().GameOver();
+             //   view.HUDManager.GetInstance().GameOver();
             }
         }
     }
@@ -48,21 +48,30 @@ public class LevelManager : MonoBehaviour {
             view.HUDManager.GetInstance().SetScore();
             if(score==0)
             {
-                view.HUDManager.GetInstance().GameOver();
+               // view.HUDManager.GetInstance().GameOver();
             }
         }
     }
-    int interval=70;
-    List<SunshineProperty> sunshineList;
+    int sunshineInterval=90;
+    int []ratingScore;
+   // bool isNormal_1_1Available = false;
     #endregion
+
+    List<SunshineProperty> sunshineList;
 
     // Use this for initialization
     void Start () {
-
+        ratingScore = new int[4];
+        //test
+        ratingScore[0] = 60;//起始分
+        ratingScore[1] = 180;//一颗星
+        ratingScore[2] = 220;//两颗星
+        ratingScore[3] = 240;//三颗星
+        //end test
         Global.InitElimTemplate();
 
         InitSunshineTemplate();
-        InvokeRepeating("Sunshine", interval, interval);
+        InvokeRepeating("Sunshine", sunshineInterval, sunshineInterval);
 
     }
     void InitSunshineTemplate()
