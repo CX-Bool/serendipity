@@ -11,4 +11,5 @@ public class ScoreSlider : MonoBehaviour {
         slider = gameObject.GetComponent<Slider>();
 	}
 	
+
 }

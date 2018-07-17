@@ -7,7 +7,7 @@ public class DaChun : Plant {
     {
         base.Skill();
  
-        Ground.GetInstance().ChangeMoisture(0, property.position.y, Global.HorizonalGridNum,  property.height,2);
+      //  Ground.GetInstance().ChangeMoisture(0, property.position.y, Global.HorizonalGridNum,  property.height,2);
 
 
         int left = property.position.x - 2;
@@ -16,7 +16,7 @@ public class DaChun : Plant {
         int right = property.position.x + property.width + 2;
         right = right < Global.HorizonalGridNum ? right : Global.HorizonalGridNum;
 
-        Ground.GetInstance().ChangeMoisture(left, property.position.y, 2, property.height, 2) ;
-        Ground.GetInstance().ChangeMoisture(property.position.x+property.width, property.position.y, 2, property.height, 2) ;
+        Ground.GetInstance().ChangeMoisture(left, property.position.y+ property.height-1, 2, property.height, 2) ;
+        Ground.GetInstance().ChangeMoisture(property.position.x+property.width, property.position.y+ property.height-1, 2, property.height, 2) ;
     }
 }

@@ -36,8 +36,13 @@ namespace view
 
         #region UI资源
         public Text steps;
-        public Text score;
         public Text floatingTextPrefab;
+        public Text score;
+        public Slider slider;
+
+        public RawImage attention;
+        public Texture2D[] attentionTexture;
+
         /// <summary>
         /// option的图片资源
         /// </summary>
@@ -54,6 +59,7 @@ namespace view
 
             cloudOptionList = CloudOptManager.GetInstance().optionList;
             plantOptionList = PlantOptManager.GetInstance().optionList;
+            
             //cloudOptImageList = new List<RawImage>();
             //plantOptImageList = new List<RawImage>();
             EnableSubscribe();
@@ -69,6 +75,14 @@ namespace view
         {
             sunshineObj.CrossFadeAlpha(0, 0, true);
             yield return null;
+        }
+
+        public void InitScoreSlider(int[]rating,int n)
+        {
+            slider.maxValue = rating[n - 1];
+            slider.minValue = 0;
+            slider.value = rating[0];
+            SetScore((int)slider.value);
         }
         private void EnableSubscribe()
         {
@@ -89,7 +103,6 @@ namespace view
             for (int i = 0; i < count; i++)
             {
                 cloudOptImageList[i].gameObject.SetActive(true);
-                Debug.Log("HUDManager Start----2");
 
                 cloudOptImageList[i].texture = cloudOptionList[i].texture;
                 cloudOptImageList[i].transform.localScale = new Vector3(cloudOptionList[i].width / 2f, (float)cloudOptionList[i].height / 2f, 1);
@@ -105,6 +118,7 @@ namespace view
 
         private void UpdatePlantOption()
         {
+           
             //clear plant option
             while(plantOptImageList.Count>0)
             {
@@ -118,6 +132,17 @@ namespace view
                 p = null;
             }
             plantOptImageList.Clear();
+
+            if (plantOptionList.Count == 0)
+            {
+                attention.texture = attentionTexture[0];
+                return;
+            }
+            else
+            {
+                attention.texture = attentionTexture[1];
+            }
+
             int index = 0;
             //generate plant option
             foreach (KeyValuePair<PlantProperty, List<Vector2Int>> item in plantOptionList)
@@ -126,8 +151,8 @@ namespace view
                 plantOption.texture = item.Key.texture;
 
                 plantOption.GetComponent<PlantOption>().canvas = transform.GetComponent<RectTransform>();
-                plantOption.transform.SetParent(transform.Find("PlantPanel"));
-                plantOption.transform.localPosition = new Vector3(optWidthOffset * (index - 1), optHeightPos, 0);
+                plantOption.transform.SetParent(transform.Find("PlantPanel/MyScrollView"));
+                plantOption.transform.localPosition = new Vector3(optWidthOffset * (index+1), optHeightPos, 0);
                 plantOption.transform.localScale = new Vector3(1,1,1);
 
                 plantOption.GetComponent<PlantOption>().plantProperty = item.Key;
@@ -138,7 +163,11 @@ namespace view
 
                 index++;
             }
-            //plantPanel.GetComponent<PlantPanel>().right.x =  plantOptImageList[plantOptImageList.Count-1].rectTransform.anchoredPosition.x;
+            if(plantOptImageList.Count>=4)
+              plantPanel.GetComponent<PlantPanel>().left.x = plantPanel.GetComponent<PlantPanel>().right.x-(plantOptImageList.Count - 3) * (plantOptImageList[0].rectTransform.rect.width+optWidthOffset) ;
+            
+            //Debug.Log(plantPanel.GetComponent<PlantPanel>().right.x);
+
         }
 
 
@@ -157,7 +186,7 @@ namespace view
             {
                 for (int i = 0; i < plantOptionList.Count; i++)
                 {
-                    plantOptImageList[i].gameObject.GetComponent<PutBackOption>().Target = new Vector3(optWidthOffset * (i - 1), optHeightPos, 0);
+                    plantOptImageList[i].gameObject.GetComponent<PutBackOption>().Target = new Vector3(optWidthOffset * (i + 1), optHeightPos, 0);
                 }
             }
 
@@ -166,9 +195,10 @@ namespace view
         {
             steps.text = LevelManager.GetInstance().Steps.ToString();
         }
-        public void SetScore()
+        public void SetScore(int s)
         {
-            score.text = LevelManager.GetInstance().Score.ToString();
+            slider.value = s;
+            score.text = s+"/"+slider.maxValue;
         }
 
         private void TogglePanelFlag()

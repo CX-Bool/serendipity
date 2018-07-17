@@ -45,11 +45,12 @@ public class LevelManager : MonoBehaviour {
         set
         {
             score = value;
-            view.HUDManager.GetInstance().SetScore();
+            view.HUDManager.GetInstance().SetScore(score);
             if(score==0)
             {
                // view.HUDManager.GetInstance().GameOver();
             }
+
         }
     }
     int sunshineInterval=90;
@@ -71,6 +72,7 @@ public class LevelManager : MonoBehaviour {
         Global.InitElimTemplate();
 
         InitSunshineTemplate();
+        view.HUDManager.GetInstance().InitScoreSlider(ratingScore,4);
         InvokeRepeating("Sunshine", sunshineInterval, sunshineInterval);
 
     }

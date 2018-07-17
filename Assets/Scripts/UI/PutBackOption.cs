@@ -27,7 +27,7 @@ public class PutBackOption : MonoBehaviour {
 
         while (Vector3.Distance(transform.localPosition, target) >= 0.01f)
         {
-
+            Debug.Log(target);
             transform.localPosition = Vector3.Lerp(transform.localPosition, target, smoothing * Time.deltaTime);
             yield return null;
         }

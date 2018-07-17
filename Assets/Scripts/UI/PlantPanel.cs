@@ -10,12 +10,12 @@ public class PlantPanel : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
     protected Vector2 offset = new Vector3();    //用来得到鼠标和图片的差值
     protected RectTransform imgRect;        //得到图片的ugui坐标
 
-    public Vector2 left, right;
+    public Vector2 left, right;//拖动panel能到达的最左位置和最右位置，最右位置应当就是初始位置，鼠标不能再向右拖了
 
     void Start()
     {
         imgRect = GetComponent<RectTransform>();
-        left = right = imgRect.anchoredPosition;
+        left = right = imgRect.localPosition;
     }
     //当鼠标按下时调用 接口对应  IPointerDownHandler
     public void OnPointerDown(PointerEventData eventData)
@@ -62,14 +62,18 @@ public class PlantPanel : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
     public void OnEndDrag(PointerEventData eventData)
     {
         offset = Vector2.zero;
-        //if (imgRect.anchoredPosition.x > right.x)
-        //{
-        //    gameObject.GetComponent<PutBackOption>().Target = right;
-        //}
-        //if (imgRect.anchoredPosition.x < left.x)
-        //{
-        //    gameObject.GetComponent<PutBackOption>().Target = left;
-
-        //}
+        //已经过了最右位置还想往右拖
+        if (imgRect.localPosition.x > right.x)
+        {
+            gameObject.GetComponent<PutBackOption>().Target = right;
+            //imgRect.localPosition = right;
+            
+        }
+        //过了最左位置还想往左拖
+        else if (imgRect.localPosition.x < left.x)
+        {
+            gameObject.GetComponent<PutBackOption>().Target = left;
+            //imgRect.localPosition = left;
+        }
     }
 }

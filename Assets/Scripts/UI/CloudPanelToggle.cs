@@ -56,7 +56,7 @@ public class CloudPanelToggle : MonoBehaviour {
     {
         isHiding = isHiding == 0 ? 1 : 0;
         Target = position[isHiding];
-        Debug.Log(position[isHiding]);
+
     }
     IEnumerator Movement(Vector3 target)
     {
