@@ -62,18 +62,26 @@ public class LevelManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        ratingScore = new int[4];
+        ratingScore = new int[5];
+      
+        InitScoreSlider();
+        Global.InitElimTemplate();
+
+        InitSunshineTemplate();
+        InvokeRepeating("Sunshine", sunshineInterval, sunshineInterval);
+
+    }
+    void InitScoreSlider()
+    {
         //test
         ratingScore[0] = 60;//起始分
         ratingScore[1] = 180;//一颗星
         ratingScore[2] = 220;//两颗星
         ratingScore[3] = 240;//三颗星
+        ratingScore[4] = Global.HorizonalGridNum * Global.VerticalGridNum * Global.highestMoisture;//总分
         //end test
-        Global.InitElimTemplate();
 
-        InitSunshineTemplate();
-        view.HUDManager.GetInstance().InitScoreSlider(ratingScore,4);
-        InvokeRepeating("Sunshine", sunshineInterval, sunshineInterval);
+        view.HUDManager.GetInstance().InitScoreSlider(ratingScore,5);
 
     }
     void InitSunshineTemplate()
@@ -114,13 +122,22 @@ public class LevelManager : MonoBehaviour {
         SunshineProperty property = sunshineList[Random.Range(0, sunshineList.Count)];
         property.position = new Vector2Int(Random.Range(0, Global.HorizonalGridNum - property.width), Random.Range(0, Global.VerticalGridNum - property.height));
         Ground.GetInstance().Sunshine(property);
-        view.HUDManager.GetInstance().Sunshine(property.position.x);
     }
     public void AddSteps(int i)
     {
         Steps += i;
-        view.HUDManager.GetInstance().GenerateFloatingText("+" + i.ToString()
-            , view.HUDManager.GetInstance().steps.rectTransform.position
-            , view.HUDManager.GetInstance().steps.rectTransform.rotation);
+        if(i>0)
+        {
+            view.HUDManager.GetInstance().GenerateFloatingText("+" + i.ToString()
+           , view.HUDManager.GetInstance().steps.rectTransform.position
+           , view.HUDManager.GetInstance().steps.rectTransform.rotation);
+        }
+        else
+        {
+            view.HUDManager.GetInstance().GenerateFloatingText("-" + i.ToString()
+           , view.HUDManager.GetInstance().steps.rectTransform.position
+           , view.HUDManager.GetInstance().steps.rectTransform.rotation);
+        }
+       
     }
 }

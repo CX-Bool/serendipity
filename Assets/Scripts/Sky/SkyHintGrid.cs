@@ -19,7 +19,7 @@ public class SkyHintGrid : AbstractGrid
                 material.color = Color.clear;
             else
             {
-                material.color = Color.white;
+                material.color = Color.white*0.6f;
                 material.mainTexture = hintTextures[hintState];
             }
         }

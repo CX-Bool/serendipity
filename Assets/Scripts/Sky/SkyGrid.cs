@@ -21,7 +21,7 @@ public class SkyGrid : AbstractGrid
     {
         textures = new List<Texture2D>();
 
-        textures.Add(Resources.Load("Textures/emptySkyGrid") as Texture2D);
+        textures.Add(Resources.Load("Textures/EmptySkyGrid") as Texture2D);
         textures.Add(Resources.Load("Textures/SkyGrid") as Texture2D);
     }
 }

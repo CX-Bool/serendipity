@@ -467,25 +467,33 @@ public class Ground : MonoBehaviour
         {
             for (int j = property.position.y, n = 0; j < property.position.y + property.height; j++, n++)
             {
-                if(grids[i,j].increaseLock==false)
+                if(grids[i,j].decreaseLock==false)
                 {
                     grids[i, j].Moisture -= property.data[m, n];
 
                 }
             }
         }
+        view.HUDManager.GetInstance().Sunshine(grids[property.position.x,property.position.y].transform.position);
+
         UpdatePlantOption();
     }
     public void ChangeMoisture(int x, int y, int width, int height,int val)
     {
+        bool isOverWet = false;
         for (int m = x; m < x + width; m++)
         {
             for (int n = y; n > y - height; n--)
             {
+
+                if (grids[m, n].Moisture + val > Global.highestMoisture&& grids[m, n].increaseLock==false)
+                    isOverWet = true;
                 grids[m, n].Moisture += val;
 
             }
         }
+        if (isOverWet)
+            LevelManager.GetInstance().AddSteps(-1);
     }
     public void ChangeMoisture(int x,int y,int value)
     {

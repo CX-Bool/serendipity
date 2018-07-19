@@ -79,6 +79,15 @@
     <data>1001</data>
     <textureName>block11</textureName>
   </Cloud>
+
+  <Cloud>
+    <type>NORMAL</type>
+    <width>2</width>
+    <height>2</height>
+    <data>0110</data>
+    <textureName>block12</textureName>
+  </Cloud>
+  
   <Cloud>
     <type>NORMAL_1_1</type>
     <width>1</width>

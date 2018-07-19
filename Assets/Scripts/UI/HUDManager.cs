@@ -52,6 +52,8 @@ namespace view
         public RawImage sunshineObj;
         public RawImage gameoverCanvas;
         public RawImage plantPanel;
+
+        public RawImage[] arrows;
         #endregion
         // Use this for initialization
         void Start()
@@ -63,13 +65,11 @@ namespace view
             //cloudOptImageList = new List<RawImage>();
             //plantOptImageList = new List<RawImage>();
             EnableSubscribe();
-            Debug.Log("HUDManager Start----1");
             SetSteps();
             UpdateCloudOption();
 
             StartCoroutine("InitialSunshine");
         }
-        // Update is called once per frame
         //不知道为什么设置不成功，逼得我写了个这
         IEnumerator InitialSunshine()
         {
@@ -79,10 +79,14 @@ namespace view
 
         public void InitScoreSlider(int[]rating,int n)
         {
+            slider.interactable = false;
+
             slider.maxValue = rating[n - 1];
             slider.minValue = 0;
             slider.value = rating[0];
             SetScore((int)slider.value);
+
+
         }
         private void EnableSubscribe()
         {
@@ -118,7 +122,6 @@ namespace view
 
         private void UpdatePlantOption()
         {
-           
             //clear plant option
             while(plantOptImageList.Count>0)
             {
@@ -144,6 +147,7 @@ namespace view
             }
 
             int index = 0;
+            plantPanel.GetComponent<PutBackOption>().Target = plantPanel.GetComponent<PlantPanel>().right;
             //generate plant option
             foreach (KeyValuePair<PlantProperty, List<Vector2Int>> item in plantOptionList)
             {
@@ -204,10 +208,9 @@ namespace view
         private void TogglePanelFlag()
         { isCloudPanel = !isCloudPanel; }
 
-        public void Sunshine(int pos)
+        public void Sunshine(Vector3 pos)
         {
-            sunshineObj.transform.position = new Vector3(Screen.currentResolution.width * (float)(pos) / (Global.HorizonalGridNum - 2),
-                sunshineObj.transform.position.y, sunshineObj.transform.position.z);
+            sunshineObj.transform.position = Camera.main.WorldToScreenPoint(pos);
             StartCoroutine("DisplaySunshine");
         }
 
@@ -223,7 +226,7 @@ namespace view
         public void GenerateFloatingText(string text,Vector3 position,Quaternion rotation)
         {
             Text t=Instantiate(floatingTextPrefab, position, rotation);
-            t.GetComponent<FloatingText>().SetText(text, Color.green);
+            t.GetComponent<FloatingText>().SetText(text, Color.gray);
             t.transform.SetParent(steps.transform);
         }
 

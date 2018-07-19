@@ -18,5 +18,22 @@ public class PlantProperty : TemplateProperty
     /// </summary>
     [Range(-1,5)]
     public int moisture;
+    /// <summary>
+    /// 介绍
+    /// </summary>
+    public string comment;
+    /// <summary>
+    /// 出处典籍
+    /// </summary>
+    public string provenance;
+    /// <summary>
+    /// 出处文本
+    /// </summary>
+    public string reference;
+    /// <summary>
+    /// 技能描述
+    /// </summary>
+    public string skill;
+ 
 
 }

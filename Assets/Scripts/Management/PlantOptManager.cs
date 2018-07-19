@@ -52,26 +52,21 @@ public class PlantOptManager : MonoBehaviour {
         { 
             XmlNodeList cloudList = xmlDoc.SelectSingleNode("main").ChildNodes;
             foreach (XmlNode xn in cloudList)
-            {
-                string name = xn.SelectSingleNode("Name").InnerText;
-                int width = int.Parse(xn.SelectSingleNode("Width").InnerText);
-                int height = int.Parse(xn.SelectSingleNode("Height").InnerText);
-                int moisture = int.Parse(xn.SelectSingleNode("Moisture").InnerText);
-
-                Global.TemplateType templetType = (Global.TemplateType)System.Enum.Parse(typeof(Global.TemplateType), xn.SelectSingleNode("TemplateType").InnerText);
-                string tex = xn.SelectSingleNode("TextureName").InnerText;
-                Global.PlantType type = (Global.PlantType)System.Enum.Parse(typeof(Global.PlantType), xn.SelectSingleNode("Type").InnerText);
-
+            { 
                 PlantProperty property = new PlantProperty();
-                property.name = name;
-                property.width = width;
-                property.height = height;
-                property.type = type;
-                property.templateType = templetType;
-                property.texture = Resources.Load("Textures/" + tex) as Texture2D;
-                property.moisture = moisture;
+                property.name = xn.SelectSingleNode("Name").InnerText;
+                property.width = int.Parse(xn.SelectSingleNode("Width").InnerText);
+                property.height = int.Parse(xn.SelectSingleNode("Height").InnerText);
+                property.type = (Global.PlantType)System.Enum.Parse(typeof(Global.PlantType), xn.SelectSingleNode("Type").InnerText);
+                property.templateType = (Global.TemplateType)System.Enum.Parse(typeof(Global.TemplateType), xn.SelectSingleNode("TemplateType").InnerText);
+                property.texture = Resources.Load("Textures/" + xn.SelectSingleNode("TextureName").InnerText) as Texture2D;
+                property.moisture = int.Parse(xn.SelectSingleNode("Moisture").InnerText);
+                property.skill= xn.SelectSingleNode("Skill").InnerText;
+                property.comment= xn.SelectSingleNode("Comment").InnerText;
+                property.provenance = xn.SelectSingleNode("Provenance").InnerText;
+                property.reference= xn.SelectSingleNode("Reference").InnerText;
 
-                switch(property.templateType)
+                switch (property.templateType)
                 {
                     case Global.TemplateType.SMALL_2_2:
                         smallPlants.Add(property);

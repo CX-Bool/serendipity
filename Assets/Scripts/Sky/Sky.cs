@@ -87,7 +87,7 @@ public class Sky : MonoBehaviour {
    
     private void InitSky()
     {
-        float angle = -140f;
+        float angle = -130f;
         float wScale = 1f / wNum * transform.localScale.x;
         float hScale = 1f / hNum * transform.localScale.z;
 
@@ -324,6 +324,7 @@ public class Sky : MonoBehaviour {
     /// <param name="height">区域高度</param>
     public void RainFall(int x,int y,int width,int height)
     {
+        AudioManager.GetInstance().PlayAudio("rain");
         for (int m = x; m < x+width; m++)
         {
             for (int n = y; n > y-height; n--)
